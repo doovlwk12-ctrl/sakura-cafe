@@ -1,0 +1,128 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
+    "home": "Home",
+    "menu": "Menu",
+    "about": "About Us",
+    "branches": "Branches",
+    "contact": "Contact",
+    "admin": "Admin",
+    "pos": "POS"
+  },
+  "menu": {
+    "title": "Our Menu",
+    "categories": {
+      "drinks": "Drinks",
+      "sweet": "Sweet",
+      "sandwiches": "Sandwiches",
+      "groups": "Groups"
+    },
+    "filters": {
+      "all": "All",
+      "hot": "Hot",
+      "cold": "Cold",
+      "price": "Price",
+      "calories": "Calories"
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "orders": "Orders",
+    "users": "Users",
+    "reports": "Reports",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "pos": {
+    "title": "Point of Sale",
+    "newOrder": "New Order",
+    "currentOrder": "Current Order",
+    "orderHistory": "Order History",
+    "payment": "Payment",
+    "total": "Total",
+    "tax": "Tax",
+    "discount": "Discount",
+    "finalTotal": "Final Total"
+  },
+  "products": {
+    "addProduct": "Add Product",
+    "editProduct": "Edit Product",
+    "productName": "Product Name",
+    "productNameAr": "Product Name (Arabic)",
+    "productNameEn": "Product Name (English)",
+    "category": "Category",
+    "price": "Price",
+    "calories": "Calories",
+    "description": "Description",
+    "image": "Image",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "orders": {
+    "orderNumber": "Order Number",
+    "orderDate": "Order Date",
+    "customerName": "Customer Name",
+    "customerPhone": "Customer Phone",
+    "orderItems": "Order Items",
+    "orderStatus": "Order Status",
+    "pending": "Pending",
+    "preparing": "Preparing",
+    "ready": "Ready",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "forgotPassword": "Forgot Password",
+    "rememberMe": "Remember Me",
+    "loginError": "Login Error",
+    "invalidCredentials": "Invalid Credentials"
+  },
+  "notifications": {
+    "orderReceived": "New order received",
+    "orderReady": "Order is ready",
+    "orderCancelled": "Order cancelled",
+    "productUpdated": "Product updated",
+    "userLoggedIn": "User logged in successfully",
+    "userLoggedOut": "User logged out"
+  },
+  "settings": {
+    "general": "General",
+    "appearance": "Appearance",
+    "language": "Language",
+    "notifications": "Notifications",
+    "security": "Security",
+    "backup": "Backup",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "autoSave": "Auto Save",
+    "soundEnabled": "Sound Enabled"
+  }
+}

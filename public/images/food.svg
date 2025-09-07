@@ -1,0 +1,50 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Bread Base -->
+  <rect x="30" y="100" width="140" height="60" rx="30" fill="#F4A460" stroke="#D2691E" stroke-width="2"/>
+  
+  <!-- Bread Top -->
+  <ellipse cx="100" cy="100" rx="70" ry="25" fill="#DEB887"/>
+  
+  <!-- Lettuce -->
+  <path d="M35 95 Q50 85 65 95 Q80 85 95 95 Q110 85 125 95 Q140 85 155 95" fill="#90EE90" stroke="#228B22" stroke-width="1"/>
+  <path d="M40 90 Q55 80 70 90 Q85 80 100 90 Q115 80 130 90 Q145 80 160 90" fill="#90EE90" stroke="#228B22" stroke-width="1"/>
+  
+  <!-- Tomato Slices -->
+  <circle cx="70" cy="105" r="8" fill="#FF6347"/>
+  <circle cx="100" cy="105" r="8" fill="#FF6347"/>
+  <circle cx="130" cy="105" r="8" fill="#FF6347"/>
+  
+  <!-- Cheese -->
+  <rect x="35" y="110" width="130" height="8" fill="#FFD700" stroke="#DAA520" stroke-width="1"/>
+  
+  <!-- Meat -->
+  <rect x="40" y="120" width="120" height="15" rx="7" fill="#8B4513" stroke="#654321" stroke-width="1"/>
+  
+  <!-- Onion -->
+  <ellipse cx="60" cy="125" rx="6" ry="3" fill="#F0E68C"/>
+  <ellipse cx="90" cy="125" rx="6" ry="3" fill="#F0E68C"/>
+  <ellipse cx="120" cy="125" rx="6" ry="3" fill="#F0E68C"/>
+  
+  <!-- Pickles -->
+  <ellipse cx="75" cy="130" rx="4" ry="6" fill="#32CD32"/>
+  <ellipse cx="105" cy="130" rx="4" ry="6" fill="#32CD32"/>
+  
+  <!-- Sesame Seeds -->
+  <circle cx="50" cy="95" r="1.5" fill="#F5F5DC"/>
+  <circle cx="70" cy="92" r="1.5" fill="#F5F5DC"/>
+  <circle cx="90" cy="95" r="1.5" fill="#F5F5DC"/>
+  <circle cx="110" cy="92" r="1.5" fill="#F5F5DC"/>
+  <circle cx="130" cy="95" r="1.5" fill="#F5F5DC"/>
+  <circle cx="150" cy="92" r="1.5" fill="#F5F5DC"/>
+  
+  <!-- Plate -->
+  <ellipse cx="100" cy="180" rx="85" ry="25" fill="#F5F5DC" stroke="#D2B48C" stroke-width="2"/>
+  
+  <!-- Garnish -->
+  <path d="M20 140 Q25 135 30 140" fill="none" stroke="#228B22" stroke-width="2" stroke-linecap="round"/>
+  <path d="M170 140 Q175 135 180 140" fill="none" stroke="#228B22" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Olive -->
+  <circle cx="25" cy="145" r="3" fill="#556B2F"/>
+  <circle cx="175" cy="145" r="3" fill="#556B2F"/>
+</svg>

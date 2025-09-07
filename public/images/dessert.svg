@@ -1,0 +1,41 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cake Base -->
+  <rect x="30" y="120" width="140" height="40" rx="20" fill="#DEB887" stroke="#CD853F" stroke-width="2"/>
+  
+  <!-- Cake Layer 1 -->
+  <rect x="35" y="100" width="130" height="25" rx="15" fill="#F4A460" stroke="#D2691E" stroke-width="2"/>
+  
+  <!-- Cake Layer 2 -->
+  <rect x="40" y="80" width="120" height="25" rx="12" fill="#DDA0DD" stroke="#DDA0DD" stroke-width="2"/>
+  
+  <!-- Cake Top -->
+  <rect x="45" y="60" width="110" height="25" rx="10" fill="#98FB98" stroke="#90EE90" stroke-width="2"/>
+  
+  <!-- Icing Drips -->
+  <path d="M45 85 Q50 90 55 85 Q60 90 65 85" fill="none" stroke="#DDA0DD" stroke-width="3" stroke-linecap="round"/>
+  <path d="M135 85 Q130 90 125 85 Q120 90 115 85" fill="none" stroke="#DDA0DD" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Sprinkles -->
+  <circle cx="60" cy="95" r="2" fill="#FF69B4"/>
+  <circle cx="80" cy="90" r="2" fill="#00CED1"/>
+  <circle cx="100" cy="95" r="2" fill="#FFD700"/>
+  <circle cx="120" cy="90" r="2" fill="#FF6347"/>
+  <circle cx="140" cy="95" r="2" fill="#9370DB"/>
+  
+  <!-- Cherry -->
+  <circle cx="100" cy="50" r="8" fill="#DC143C"/>
+  <path d="M100 42 Q105 38 110 42" fill="none" stroke="#228B22" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Plate -->
+  <ellipse cx="100" cy="170" rx="90" ry="20" fill="#F5F5DC" stroke="#D2B48C" stroke-width="2"/>
+  
+  <!-- Fork -->
+  <rect x="170" y="80" width="3" height="50" rx="1" fill="#C0C0C0"/>
+  <rect x="168" y="80" width="7" height="3" rx="1" fill="#C0C0C0"/>
+  <rect x="168" y="85" width="7" height="3" rx="1" fill="#C0C0C0"/>
+  <rect x="168" y="90" width="7" height="3" rx="1" fill="#C0C0C0"/>
+  
+  <!-- Chocolate Shavings -->
+  <ellipse cx="70" cy="110" rx="15" ry="3" fill="#3E2723" transform="rotate(45 70 110)"/>
+  <ellipse cx="130" cy="115" rx="12" ry="2" fill="#3E2723" transform="rotate(-30 130 115)"/>
+</svg>

@@ -1,0 +1,37 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Glass -->
+  <path d="M60 60 L60 140 Q60 160 80 160 L120 160 Q140 160 140 140 L140 60 Z" fill="#F0F8FF" stroke="#87CEEB" stroke-width="2"/>
+  
+  <!-- Glass Handle -->
+  <path d="M140 80 Q160 80 160 100 Q160 120 140 120" fill="none" stroke="#87CEEB" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Hibiscus Tea -->
+  <path d="M65 65 L135 65 L135 135 Q135 150 120 150 L80 150 Q65 150 65 135 Z" fill="#DC143C" opacity="0.8"/>
+  
+  <!-- Tea Surface -->
+  <ellipse cx="100" cy="70" rx="30" ry="6" fill="#B22222"/>
+  
+  <!-- Hibiscus Flower -->
+  <ellipse cx="100" cy="75" rx="15" ry="8" fill="#FF1493" opacity="0.9"/>
+  
+  <!-- Flower Petals -->
+  <ellipse cx="95" cy="70" rx="8" ry="4" fill="#FF69B4" transform="rotate(-30 95 70)"/>
+  <ellipse cx="105" cy="70" rx="8" ry="4" fill="#FF69B4" transform="rotate(30 105 70)"/>
+  <ellipse cx="100" cy="65" rx="6" ry="3" fill="#FF69B4"/>
+  
+  <!-- Steam -->
+  <path d="M70 40 Q75 35 80 40 Q85 35 90 40" fill="none" stroke="#E6E6FA" stroke-width="2" stroke-linecap="round"/>
+  <path d="M100" cy="40" fill="none" stroke="#E6E6FA" stroke-width="2" stroke-linecap="round"/>
+  <path d="M130 40 Q135 35 140 40 Q145 35 150 40" fill="none" stroke="#E6E6FA" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Saucer -->
+  <ellipse cx="100" cy="170" rx="80" ry="15" fill="#F8F8FF" stroke="#87CEEB" stroke-width="2"/>
+  
+  <!-- Lemon Slice -->
+  <circle cx="25" cy="120" r="8" fill="#FFD700" opacity="0.8"/>
+  <path d="M25 112 Q30 108 35 112" fill="none" stroke="#FFD700" stroke-width="1"/>
+  
+  <!-- Mint Leaf -->
+  <ellipse cx="175" cy="120" rx="6" ry="3" fill="#98FB98" transform="rotate(45 175 120)"/>
+  <ellipse cx="175" cy="125" rx="4" ry="2" fill="#98FB98" transform="rotate(45 175 125)"/>
+</svg>

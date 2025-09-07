@@ -1,0 +1,279 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Sakura Café Brand Color System */
+  --sakura-pink: #C36C72;      /* Sakura Pink - Main titles, primary buttons */
+  --deep-green: #1D453E;       /* Deep Green - Text and secondary headers */
+  --accent-green: #2A4842;     /* Accent Green - Secondary buttons and hover states */
+  --background-light: #F9FAF9; /* Light background */
+  --background-dark: #1D453E;  /* Dark background */
+  --background-white: #FFFFFF; /* Cards, modals, forms */
+  --text-light: #333333;       /* Light mode text */
+  --text-dark: #F9FAF9;        /* Dark mode text */
+  
+  /* Legacy Support (for gradual migration) */
+  --sakura-50: #fef7f7;
+  --sakura-100: #fdeeee;
+  --sakura-200: #fbdcdc;
+  --sakura-300: #f7c2c2;
+  --sakura-400: #f19a9a;
+  --sakura-500: #d06f76;
+  --sakura-600: #d06f76;
+  --sakura-700: #b73a3a;
+  --sakura-800: #963232;
+  --sakura-900: #7a2e2e;
+  
+  --coffee-50: #f0f7f5;
+  --coffee-100: #e0efeb;
+  --coffee-200: #c1dfd7;
+  --coffee-300: #a2cfc3;
+  --coffee-400: #83bfaf;
+  --coffee-500: #1d453e;
+  --coffee-600: #1d453e;
+  --coffee-700: #2c554e;
+  --coffee-800: #2c554e;
+  --coffee-900: #1a3a35;
+}
+
+html {
+  scroll-padding-top: 100px;
+  scroll-behavior: smooth;
+}
+
+body {
+  line-height: 1.6;
+  color: var(--coffee-600);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--coffee-50);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sakura-500);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sakura-600);
+}
+
+/* Custom Selection */
+::selection {
+  background: var(--sakura-500);
+  color: white;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-sakura-50 to-sakura-100 hover:from-sakura-100 hover:to-sakura-200 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-secondary {
+    @apply bg-gradient-to-r from-accent-50 to-accent-100 hover:from-accent-100 hover:to-accent-200 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-sakura-50 text-sakura-50 hover:bg-sakura-50 hover:border-sakura-100 font-bold py-4 px-8 rounded-xl transition-all duration-300;
+  }
+  
+  .card {
+    @apply bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20;
+  }
+  
+  .card-hover {
+    @apply hover:transform hover:scale-105 transition-all duration-500;
+  }
+  
+  .section-title {
+    @apply text-4xl md:text-5xl font-bold text-deep-50 mb-6;
+  }
+  
+  .section-subtitle {
+    @apply text-xl text-accent-50 mb-10;
+  }
+  
+  .arabic-text {
+    @apply font-arabic;
+  }
+  
+  .english-text {
+    @apply font-english;
+  }
+  
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .gradient-bg {
+    @apply bg-gradient-to-br from-sakura-50 to-accent-50;
+  }
+  
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-sakura-50 to-accent-50 bg-clip-text text-transparent;
+  }
+  
+  .text-shadow-strong {
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+  }
+  
+  .text-shadow-medium {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+  
+  .text-shadow-md {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  }
+  
+  .bg-pattern {
+    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.1) 1px, transparent 0);
+    background-size: 20px 20px;
+  }
+  
+  .glass-effect {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .shadow-custom {
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-sakura-50 to-accent-50 bg-clip-text text-transparent;
+  }
+  
+  .gradient-text-light {
+    @apply bg-gradient-to-r from-sakura-100 to-accent-100 bg-clip-text text-transparent;
+  }
+  
+  .gradient-text-white {
+    @apply bg-gradient-to-r from-sakura-200 to-accent-200 bg-clip-text text-transparent;
+  }
+  
+  .gradient-text-stats {
+    @apply bg-gradient-to-r from-sakura-50 to-sakura-100 bg-clip-text text-transparent;
+  }
+  
+  .hero-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  .border-3 {
+    border-width: 3px;
+  }
+  
+  .backdrop-blur-strong {
+    backdrop-filter: blur(20px);
+  }
+  
+  .shadow-3xl {
+    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .logo-glow {
+    box-shadow: 0 0 20px rgba(195, 108, 114, 0.3);
+  }
+  
+  .logo-glow:hover {
+    box-shadow: 0 0 30px rgba(195, 108, 114, 0.5);
+  }
+  
+  .w-18 {
+    width: 4.5rem;
+  }
+  
+  .h-18 {
+    height: 4.5rem;
+  }
+  
+  .h-22 {
+    height: 5.5rem;
+  }
+  
+  .border-3 {
+    border-width: 3px;
+  }
+  
+  /* Navbar Enhancements */
+  .navbar-link-hover {
+    position: relative;
+  }
+  
+  .navbar-link-hover::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 50%;
+    background: #C36C72;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+  
+  .navbar-link-hover:hover::after {
+    width: 100%;
+  }
+  
+  .navbar-brand-glow {
+    text-shadow: 0 0 10px rgba(195, 108, 114, 0.3);
+  }
+  
+  .navbar-brand-glow:hover {
+    text-shadow: 0 0 15px rgba(195, 108, 114, 0.5);
+  }
+  
+  .navbar-icon-button {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .navbar-icon-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(195, 108, 114, 0.2);
+    transition: all 0.4s ease;
+    transform: translate(-50%, -50%);
+  }
+  
+  .navbar-icon-button:hover::before {
+    width: 120%;
+    height: 120%;
+  }
+  
+  /* Fixed Logo Position */
+  .logo-fixed-right {
+    position: relative;
+    margin-left: auto;
+  }
+  
+  /* Ensure logo stays right regardless of RTL/LTR */
+  [dir="rtl"] .logo-fixed-right,
+  [dir="ltr"] .logo-fixed-right {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}

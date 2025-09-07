@@ -1,0 +1,113 @@
+/* Unified Sakura Cafe Color System - Applied to All Pages */
+/* Consistent branding across website, CMS, and POS */
+
+:root {
+  /* Unified Color Palette */
+  --new-primary: #045B62;        /* Main Brand Color - Dark Green */
+  --new-secondary: #02393E;      /* Very Dark Green - Accent */
+  --new-accent: #0D484E;         /* Supportive Green - Hover States */
+  --new-highlight: #045B62;      /* Same as primary for consistency */
+  
+  /* متغيرات الوضع الليلي */
+  --dark-bg: #0f1a1a;
+  --dark-surface: #1a2a2a;
+  --dark-text: #e0e0e0;
+  --dark-border: #2a3a3a;
+}
+
+/* أنماط للأنظمة الجديدة فقط */
+.new-system {
+  --bg-primary: var(--new-primary);
+  --bg-secondary: var(--new-secondary);
+  --bg-accent: var(--new-accent);
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --border-color: var(--new-highlight);
+}
+
+/* الوضع الليلي للأنظمة الجديدة */
+.new-system.dark-mode {
+  --bg-primary: var(--dark-bg);
+  --bg-secondary: var(--dark-surface);
+  --bg-accent: var(--dark-border);
+  --text-primary: var(--dark-text);
+  --text-secondary: #b0b0b0;
+  --border-color: var(--new-highlight);
+}
+
+/* فئات مساعدة للأنظمة الجديدة */
+.new-system .btn-primary {
+  background-color: var(--new-highlight);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.new-system .btn-primary:hover {
+  background-color: #b55a60;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(195, 108, 114, 0.3);
+}
+
+.new-system .btn-secondary {
+  background-color: var(--new-secondary);
+  color: white;
+  border: 1px solid var(--new-highlight);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.new-system .btn-secondary:hover {
+  background-color: var(--new-accent);
+  border-color: var(--new-highlight);
+}
+
+.new-system .card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.new-system .input {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.new-system .input:focus {
+  outline: none;
+  border-color: var(--new-highlight);
+  box-shadow: 0 0 0 3px rgba(195, 108, 114, 0.1);
+}
+
+/* تأثيرات انتقالية */
+.new-system * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* تحسينات للأجهزة المحمولة */
+@media (max-width: 768px) {
+  .new-system .btn-primary,
+  .new-system .btn-secondary {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .new-system .card {
+    padding: 16px;
+  }
+  
+  .new-system .input {
+    padding: 10px 14px;
+  }
+}

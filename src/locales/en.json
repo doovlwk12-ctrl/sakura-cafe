@@ -1,0 +1,119 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "menu": "Menu",
+    "branches": "Our Branches",
+    "contact": "Contact Us",
+    "admin": "Admin",
+    "pos": "POS"
+  },
+  "brand": {
+    "name": "Sakura Café",
+    "tagline": "Premium Coffee Experience"
+  },
+  "hero": {
+    "title": "Sakura Café",
+    "subtitle": "Unique Dining Experience",
+    "description": "Discover the finest flavors of coffee and Middle Eastern cuisine in a calm and comfortable atmosphere",
+    "cta": "Order Now"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Sakura Café Story",
+    "description": "We serve the finest coffee and Middle Eastern cuisine in a comfortable and peaceful atmosphere",
+    "mission": "Our Mission",
+    "missionText": "To provide a unique and exceptional dining experience for our valued customers",
+    "vision": "Our Vision",
+    "visionText": "To be the leading café in the region in terms of quality and service"
+  },
+  "menu": {
+    "title": "Menu",
+    "subtitle": "Delicious Food & Beverages",
+    "all": "All",
+    "drinks": "Drinks",
+    "sweets": "Desserts",
+    "sandwiches": "Sandwiches",
+    "groups": "Groups",
+    "price": "Price",
+    "addToCart": "Add to Cart"
+  },
+  "branches": {
+    "title": "Our Branches",
+    "subtitle": "Visit us at any of our branches",
+    "address": "Address",
+    "phone": "Phone",
+    "hours": "Working Hours",
+    "getDirections": "Get Directions",
+    "viewOnMap": "View on Map"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We are here to serve you",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "message": "Message",
+    "send": "Send",
+    "info": "Contact Information",
+    "address": "Address",
+    "workingHours": "Working Hours"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "welcome": "Welcome",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "orders": "Orders",
+    "users": "Users",
+    "reports": "Reports",
+    "settings": "Settings",
+    "login": "Login",
+    "username": "Username",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?"
+  },
+  "pos": {
+    "title": "Point of Sale",
+    "subtitle": "Sales Management System",
+    "search": "Search",
+    "categories": "Categories",
+    "cart": "Cart",
+    "total": "Total",
+    "checkout": "Checkout",
+    "paymentMethod": "Payment Method",
+    "cash": "Cash",
+    "card": "Card",
+    "receipt": "Receipt"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset"
+  },
+  "theme": {
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "toggle": "Toggle Theme"
+  },
+  "language": {
+    "ar": "العربية",
+    "en": "English",
+    "toggle": "Toggle Language"
+  }
+}

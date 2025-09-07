@@ -1,0 +1,45 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Brownie Base -->
+  <rect x="40" y="80" width="120" height="80" rx="15" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+  
+  <!-- Brownie Texture -->
+  <rect x="45" y="85" width="110" height="70" rx="10" fill="#654321"/>
+  
+  <!-- Chocolate Chunks -->
+  <rect x="60" y="95" width="8" height="8" rx="2" fill="#3E2723"/>
+  <rect x="80" y="100" width="6" height="6" rx="1" fill="#3E2723"/>
+  <rect x="100" y="95" width="8" height="8" rx="2" fill="#3E2723"/>
+  <rect x="120" y="100" width="6" height="6" rx="1" fill="#3E2723"/>
+  <rect x="140" y="95" width="8" height="8" rx="2" fill="#3E2723"/>
+  
+  <rect x="70" y="110" width="6" height="6" rx="1" fill="#3E2723"/>
+  <rect x="90" y="115" width="8" height="8" rx="2" fill="#3E2723"/>
+  <rect x="110" y="110" width="6" height="6" rx="1" fill="#3E2723"/>
+  <rect x="130" y="115" width="8" height="8" rx="2" fill="#3E2723"/>
+  
+  <rect x="60" y="125" width="8" height="8" rx="2" fill="#3E2723"/>
+  <rect x="80" y="130" width="6" height="6" rx="1" fill="#3E2723"/>
+  <rect x="100" y="125" width="8" height="8" rx="2" fill="#3E2723"/>
+  <rect x="120" y="130" width="6" height="6" rx="1" fill="#3E2723"/>
+  <rect x="140" y="125" width="8" height="8" rx="2" fill="#3E2723"/>
+  
+  <!-- Cracks -->
+  <path d="M50 100 Q60 98 70 100" fill="none" stroke="#3E2723" stroke-width="1" opacity="0.6"/>
+  <path d="M80 110 Q90 108 100 110" fill="none" stroke="#3E2723" stroke-width="1" opacity="0.6"/>
+  <path d="M110 120 Q120 118 130 120" fill="none" stroke="#3E2723" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Plate -->
+  <ellipse cx="100" cy="180" rx="90" ry="20" fill="#F5F5DC" stroke="#D2B48C" stroke-width="2"/>
+  
+  <!-- Fork -->
+  <rect x="170" y="90" width="3" height="50" rx="1" fill="#C0C0C0"/>
+  <rect x="168" y="90" width="7" height="3" rx="1" fill="#C0C0C0"/>
+  <rect x="168" y="95" width="7" height="3" rx="1" fill="#C0C0C0"/>
+  <rect x="168" y="100" width="7" height="3" rx="1" fill="#C0C0C0"/>
+  
+  <!-- Powdered Sugar -->
+  <circle cx="70" cy="90" r="1" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="90" cy="88" r="1" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="110" cy="90" r="1" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="130" cy="88" r="1" fill="#FFFFFF" opacity="0.8"/>
+</svg>

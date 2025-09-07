@@ -1,0 +1,64 @@
+/* GSAP Animation Performance Optimizations */
+
+/* Hardware acceleration for animated elements */
+.menu-card,
+.navbar-element,
+.hero-text,
+.hero-image {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Smooth transitions for hover effects */
+.menu-card {
+  transition: box-shadow 0.3s ease;
+}
+
+/* Optimize text rendering */
+.hero-text h1,
+.hero-text h2,
+.hero-text p {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .menu-card,
+  .navbar-element,
+  .hero-text,
+  .hero-image {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Loading states */
+.loading {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.loaded {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Parallax container */
+.parallax-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.parallax-element {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  will-change: transform;
+}

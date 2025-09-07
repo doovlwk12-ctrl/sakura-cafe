@@ -1,0 +1,151 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "success": "تم بنجاح",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "add": "إضافة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "sort": "ترتيب",
+    "refresh": "تحديث",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "yes": "نعم",
+    "no": "لا"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "menu": "قائمة الطعام",
+    "about": "من نحن",
+    "branches": "الفروع",
+    "contact": "اتصل بنا",
+    "admin": "الإدارة",
+    "pos": "نقطة البيع"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "menu": "قائمة الطعام",
+    "about": "من نحن",
+    "branches": "الفروع",
+    "contact": "اتصل بنا",
+    "admin": "الإدارة",
+    "pos": "نقطة البيع"
+  },
+  "brand": {
+    "name": "مقهى ساكورا",
+    "tagline": "تجربة قهوة مميزة"
+  },
+  "welcome": "اكتشف أجمل نكهات القهوة والمأكولات الشرقية والغربية في أجواء هادئة ومريحة",
+  "about_us": "من نحن",
+  "menu": {
+    "title": "قائمة الطعام",
+    "categories": {
+      "drinks": "المشروبات",
+      "sweet": "الحلويات",
+      "sandwiches": "الساندويتشات",
+      "groups": "المجموعات"
+    },
+    "filters": {
+      "all": "الكل",
+      "hot": "حار",
+      "cold": "بارد",
+      "price": "السعر",
+      "calories": "السعرات الحرارية"
+    }
+  },
+  "admin": {
+    "title": "لوحة الإدارة",
+    "dashboard": "الرئيسية",
+    "products": "المنتجات",
+    "orders": "الطلبات",
+    "users": "المستخدمين",
+    "reports": "التقارير",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  },
+  "pos": {
+    "title": "نقطة البيع",
+    "newOrder": "طلب جديد",
+    "currentOrder": "الطلب الحالي",
+    "orderHistory": "سجل الطلبات",
+    "payment": "الدفع",
+    "total": "المجموع",
+    "tax": "الضريبة",
+    "discount": "الخصم",
+    "finalTotal": "المجموع النهائي"
+  },
+  "products": {
+    "addProduct": "إضافة منتج",
+    "editProduct": "تعديل منتج",
+    "productName": "اسم المنتج",
+    "productNameAr": "اسم المنتج بالعربية",
+    "productNameEn": "اسم المنتج بالإنجليزية",
+    "category": "الفئة",
+    "price": "السعر",
+    "calories": "السعرات الحرارية",
+    "description": "الوصف",
+    "image": "الصورة",
+    "status": "الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+  "orders": {
+    "orderNumber": "رقم الطلب",
+    "orderDate": "تاريخ الطلب",
+    "customerName": "اسم العميل",
+    "customerPhone": "هاتف العميل",
+    "orderItems": "عناصر الطلب",
+    "orderStatus": "حالة الطلب",
+    "pending": "في الانتظار",
+    "preparing": "قيد التحضير",
+    "ready": "جاهز",
+    "delivered": "تم التوصيل",
+    "cancelled": "ملغي"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "email": "البريد الإلكتروني",
+    "forgotPassword": "نسيت كلمة المرور",
+    "rememberMe": "تذكرني",
+    "loginError": "خطأ في تسجيل الدخول",
+    "invalidCredentials": "بيانات غير صحيحة"
+  },
+  "notifications": {
+    "orderReceived": "تم استلام طلب جديد",
+    "orderReady": "الطلب جاهز",
+    "orderCancelled": "تم إلغاء الطلب",
+    "productUpdated": "تم تحديث المنتج",
+    "userLoggedIn": "تم تسجيل الدخول بنجاح",
+    "userLoggedOut": "تم تسجيل الخروج"
+  },
+  "settings": {
+    "general": "عام",
+    "appearance": "المظهر",
+    "language": "اللغة",
+    "notifications": "الإشعارات",
+    "security": "الأمان",
+    "backup": "النسخ الاحتياطي",
+    "darkMode": "الوضع الليلي",
+    "lightMode": "الوضع النهاري",
+    "autoSave": "حفظ تلقائي",
+    "soundEnabled": "تفعيل الصوت"
+  },
+  "language": {
+    "toggle": "تغيير اللغة"
+  },
+  "theme": {
+    "toggle": "تغيير المظهر",
+    "dark": "ليلي",
+    "light": "نهاري"
+  }
+}
