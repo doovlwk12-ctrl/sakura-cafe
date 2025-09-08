@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: result.message,
-        cartReward: result.cartReward || null,
+        // cartReward: result.cartReward || null,  // تم إزالة هذا الحقل
         cart: {
           items: cartItems,
           rewards: cartRewards,

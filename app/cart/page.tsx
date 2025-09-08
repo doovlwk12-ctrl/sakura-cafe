@@ -25,7 +25,7 @@ import Link from 'next/link'
 
 export default function CartPage() {
   const { items, totalItems, totalPrice, updateQuantity, removeFromCart, clearCart } = useCart()
-  const { createOrder } = useOrders()
+  const { addOrder: createOrder } = useOrders()
   const { user, isAuthenticated } = useAuth()
   const { t, isRTL, language, changeLanguage } = useLanguage()
   const { isDark, toggleTheme } = useTheme()
@@ -46,6 +46,7 @@ export default function CartPage() {
   const [cartData, setCartData] = React.useState<any>(null)
   const [isLoadingCart, setIsLoadingCart] = React.useState(false)
   const [isApplyingReward, setIsApplyingReward] = React.useState(false)
+  const [isApplyingDiscount, setIsApplyingDiscount] = React.useState(false)
 
   // دالة لتحويل التاريخ إلى التقويم الهجري
   const convertToHijri = (date: Date): string => {

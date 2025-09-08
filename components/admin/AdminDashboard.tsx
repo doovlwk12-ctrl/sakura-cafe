@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../AuthProvider';
 import LanguageSwitcher from '../LanguageSwitcher';
 import ThemeToggle from '../ThemeToggle';
@@ -9,6 +9,7 @@ import AdvancedReports from './AdvancedReports';
 import InventoryManagement from './InventoryManagement';
 import RealTimeNotifications from '../RealTimeNotifications';
 import { useLanguage } from '../../hooks/LanguageProvider';
+import { useProducts } from '../../hooks/useProducts';
 
 const AdminDashboard: React.FC = () => {
   const { logout, user } = useAuth();
@@ -384,47 +385,28 @@ const DashboardContent: React.FC = () => {
 
 const ProductsContent: React.FC = () => {
   const { t, isRTL } = useLanguage();
-  const [products, setProducts] = useState([
-    {
-      id: '1',
-      name: 'لاتيه',
-      nameAr: 'لاتيه',
-      category: 'drinks',
-      price: 18,
-      calories: 120,
-      description: 'قهوة لاتيه مع حليب مبخر',
-      descriptionAr: 'قهوة لاتيه مع حليب مبخر',
-      image: '/images/products/latte.jpg',
-      status: 'active',
-      stock: 50
-    },
-    {
-      id: '2',
-      name: 'كرواسون',
-      nameAr: 'كرواسون',
-      category: 'sweet',
-      price: 12,
-      calories: 200,
-      description: 'كرواسون فرنسي طازج',
-      descriptionAr: 'كرواسون فرنسي طازج',
-      image: '/images/products/croissant.jpg',
-      status: 'active',
-      stock: 30
-    },
-    {
-      id: '3',
-      name: 'كابتشينو',
-      nameAr: 'كابتشينو',
-      category: 'drinks',
-      price: 16,
-      calories: 100,
-      description: 'كابتشينو إيطالي أصلي',
-      descriptionAr: 'كابتشينو إيطالي أصلي',
-      image: '/images/products/cappuccino.jpg',
-      status: 'active',
-      stock: 40
-    }
-  ]);
+  const { getProducts, loading, error } = useProducts();
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // جلب المنتجات من قاعدة البيانات
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setIsLoading(true);
+        const response = await getProducts();
+        if (response && response.products) {
+          setProducts(response.products);
+        }
+      } catch (error) {
+        console.error('خطأ في جلب المنتجات:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -453,6 +435,34 @@ const ProductsContent: React.FC = () => {
     return isRTL ? product.descriptionAr : product.description;
   };
 
+  // حالة التحميل
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#e57373] mx-auto mb-4"></div>
+            <p className="text-[#6b7280] dark:text-[#9ca3af] font-arabic">جاري تحميل المنتجات...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // حالة الخطأ
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="text-red-500 text-4xl mb-4">⚠️</div>
+            <p className="text-red-500 font-arabic">خطأ في تحميل المنتجات: {error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -462,7 +472,7 @@ const ProductsContent: React.FC = () => {
             إدارة المنتجات
           </h2>
           <p className="text-gray-300 font-arabic">
-            إضافة وتعديل وحذف المنتجات
+            إضافة وتعديل وحذف المنتجات ({products.length} منتج)
           </p>
         </div>
         <button 
