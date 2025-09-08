@@ -5,9 +5,13 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { EyeIcon, EyeSlashIcon, UserIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 import { useLanguage } from '../../hooks/LanguageProvider';
+import { useTheme } from '../../hooks/useTheme';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
+import ThemeToggle from '../../components/ThemeToggle';
 
 const CashierLogin: React.FC = () => {
   const { t, isRTL } = useLanguage();
+  const { isDark } = useTheme();
   const router = useRouter();
   const [formData, setFormData] = useState({
     username: '',
@@ -73,23 +77,23 @@ const CashierLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sakura-50/10 to-deep-50/10 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#fefefe] dark:bg-[#111827] flex items-center justify-center p-4 transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="glass-card p-8 rounded-2xl shadow-2xl">
+        <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-2xl shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-r from-sakura-50 to-deep-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-[#e57373] to-[#f28b82] rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-white text-2xl">☕</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white font-arabic mb-2">
+            <h1 className="text-2xl font-bold text-[#1f2937] dark:text-[#f9fafb] font-arabic mb-2">
               تسجيل دخول الكاشير
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 font-arabic">
+            <p className="text-[#6b7280] dark:text-[#9ca3af] font-arabic">
               أدخل بياناتك للوصول إلى واجهة الكاشير
             </p>
           </div>
@@ -111,7 +115,7 @@ const CashierLogin: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Branch Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 font-arabic mb-2">
+              <label className="block text-sm font-medium text-[#1f2937] dark:text-[#f9fafb] font-arabic mb-2">
                 الفرع
               </label>
               <div className="relative">
@@ -120,7 +124,7 @@ const CashierLogin: React.FC = () => {
                   value={formData.branch}
                   onChange={handleInputChange}
                   required
-                  className="input-field pr-10"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-[#374151] rounded-lg bg-white dark:bg-[#1f2937] text-[#1f2937] dark:text-[#f9fafb] focus:ring-2 focus:ring-[#e57373] focus:border-transparent transition-all duration-300 font-arabic pr-10"
                 >
                   <option value="">اختر الفرع</option>
                   {branches.map(branch => (
@@ -129,13 +133,13 @@ const CashierLogin: React.FC = () => {
                     </option>
                   ))}
                 </select>
-                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6b7280] dark:text-[#9ca3af]" />
               </div>
             </div>
 
             {/* Username */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 font-arabic mb-2">
+              <label className="block text-sm font-medium text-[#1f2937] dark:text-[#f9fafb] font-arabic mb-2">
                 اسم المستخدم
               </label>
               <div className="relative">
@@ -145,16 +149,16 @@ const CashierLogin: React.FC = () => {
                   value={formData.username}
                   onChange={handleInputChange}
                   required
-                  className="input-field pr-10"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-[#374151] rounded-lg bg-white dark:bg-[#1f2937] text-[#1f2937] dark:text-[#f9fafb] focus:ring-2 focus:ring-[#e57373] focus:border-transparent transition-all duration-300 font-arabic pr-10"
                   placeholder="أدخل اسم المستخدم"
                 />
-                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6b7280] dark:text-[#9ca3af]" />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 font-arabic mb-2">
+              <label className="block text-sm font-medium text-[#1f2937] dark:text-[#f9fafb] font-arabic mb-2">
                 كلمة المرور
               </label>
               <div className="relative">
@@ -164,14 +168,14 @@ const CashierLogin: React.FC = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   required
-                  className="input-field pr-10"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-[#374151] rounded-lg bg-white dark:bg-[#1f2937] text-[#1f2937] dark:text-[#f9fafb] focus:ring-2 focus:ring-[#e57373] focus:border-transparent transition-all duration-300 font-arabic pr-10"
                   placeholder="أدخل كلمة المرور"
                 />
-                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6b7280] dark:text-[#9ca3af]" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b7280] dark:text-[#9ca3af] hover:text-[#1f2937] dark:hover:text-[#f9fafb]"
                 >
                   {showPassword ? (
                     <EyeSlashIcon className="w-5 h-5" />
@@ -186,7 +190,7 @@ const CashierLogin: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="button-primary w-full"
+              className="w-full px-6 py-3 bg-[#e57373] text-white rounded-lg font-medium hover:bg-[#d65a5a] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">

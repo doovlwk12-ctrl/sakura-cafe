@@ -41,9 +41,9 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen new-system bg-[#1D453E]">
+    <div className="min-h-screen bg-[#fefefe] dark:bg-[#111827] transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 p-3 md:p-4">
+      <header className="bg-white dark:bg-[#1f2937] border-b border-gray-200 dark:border-[#374151] p-3 md:p-4 transition-colors duration-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-4">
             <div className="w-6 h-6 md:w-8 md:h-8 rounded-md overflow-hidden">
@@ -59,8 +59,8 @@ const AdminDashboard: React.FC = () => {
               />
             </div>
             <div>
-              <h1 className="text-lg md:text-2xl font-bold text-deep-50">مقهى ساكورا</h1>
-              <p className="text-deep-50 text-xs md:text-sm">لوحة الإدارة</p>
+              <h1 className="text-lg md:text-2xl font-bold text-[#1f2937] dark:text-[#f9fafb] font-arabic">مقهى ساكورا</h1>
+              <p className="text-[#6b7280] dark:text-[#9ca3af] text-xs md:text-sm font-arabic">لوحة الإدارة</p>
             </div>
           </div>
           
@@ -69,11 +69,11 @@ const AdminDashboard: React.FC = () => {
               <LanguageSwitcher showText={false} />
               <ThemeToggle showText={false} />
             </div>
-            <div className="flex items-center gap-1 md:gap-2 text-deep-50">
-              <span className="hidden md:inline">مرحباً، {user?.username}</span>
+            <div className="flex items-center gap-1 md:gap-2 text-[#1f2937] dark:text-[#f9fafb]">
+              <span className="hidden md:inline font-arabic">مرحباً، {user?.username}</span>
               <button
                 onClick={logout}
-                className="btn-secondary text-xs md:text-sm px-2 py-1 md:px-4 md:py-2"
+                className="bg-[#e57373] hover:bg-[#f28b82] text-white text-xs md:text-sm px-2 py-1 md:px-4 md:py-2 rounded-lg transition-colors duration-300 font-arabic"
               >
                 {t('admin.logout')}
               </button>
@@ -84,7 +84,7 @@ const AdminDashboard: React.FC = () => {
 
       <div className="flex flex-col md:flex-row">
         {/* Mobile Tab Bar */}
-        <div className="md:hidden bg-[#254740] overflow-x-auto">
+        <div className="md:hidden bg-[#ffffff] dark:bg-[#1f2937] border-b border-gray-200 dark:border-[#374151] overflow-x-auto transition-colors duration-300">
           <nav className="flex space-x-1 p-2" style={{ minWidth: 'max-content' }}>
             {tabs.map((tab) => (
               <button
@@ -92,19 +92,19 @@ const AdminDashboard: React.FC = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200 whitespace-nowrap ${
                   activeTab === tab.id
-                    ? 'bg-[#C36C72] text-white'
-                    : 'text-gray-300 hover:bg-[#2A4842] hover:text-white'
+                    ? 'bg-[#e57373] text-white'
+                    : 'text-[#6b7280] dark:text-[#9ca3af] hover:bg-[#fce7e7] dark:hover:bg-[#374151] hover:text-[#1f2937] dark:hover:text-[#f9fafb]'
                 }`}
               >
                 <span className="text-lg">{tab.icon}</span>
-                <span className="font-medium text-xs">{tab.label}</span>
+                <span className="font-medium text-xs font-arabic">{tab.label}</span>
               </button>
             ))}
           </nav>
         </div>
 
         {/* Desktop Sidebar */}
-        <aside className="hidden md:block w-64 bg-[#254740] min-h-screen p-4">
+        <aside className="hidden md:block w-64 bg-[#ffffff] dark:bg-[#1f2937] border-r border-gray-200 dark:border-[#374151] min-h-screen p-4 transition-colors duration-300">
           <nav className="space-y-2">
             {tabs.map((tab) => (
               <button
@@ -112,12 +112,12 @@ const AdminDashboard: React.FC = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-[#C36C72] text-white'
-                    : 'text-gray-300 hover:bg-[#2A4842] hover:text-white'
+                    ? 'bg-[#e57373] text-white'
+                    : 'text-[#6b7280] dark:text-[#9ca3af] hover:bg-[#fce7e7] dark:hover:bg-[#374151] hover:text-[#1f2937] dark:hover:text-[#f9fafb]'
                 }`}
               >
                 <span className="text-xl">{tab.icon}</span>
-                <span className="font-medium">{tab.label}</span>
+                <span className="font-medium font-arabic">{tab.label}</span>
               </button>
             ))}
           </nav>
@@ -204,33 +204,33 @@ const DashboardContent: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white font-arabic">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#1f2937] dark:text-[#f9fafb] font-arabic">
             لوحة التحكم
           </h2>
-          <p className="text-gray-300 font-arabic">
+          <p className="text-[#6b7280] dark:text-[#9ca3af] font-arabic">
             نظرة عامة على أداء المقهى
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-sm text-gray-300 font-arabic">
+          <div className="text-sm text-[#6b7280] dark:text-[#9ca3af] font-arabic">
             آخر تحديث: {new Date().toLocaleTimeString('ar-SA')}
           </div>
-          <button className="px-3 py-1 bg-sakura-50 text-white rounded-lg text-sm hover:bg-sakura-100 transition-colors">
+          <button className="px-3 py-1 bg-[#e57373] hover:bg-[#f28b82] text-white rounded-lg text-sm transition-colors font-arabic">
             تحديث
           </button>
         </div>
       </div>
-
+      
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="glass-card text-center p-4 hover-lift">
+        <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-xl p-4 hover:shadow-lg transition-all duration-300 text-center">
           <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
             <span className="text-white text-xl">💰</span>
           </div>
-          <h3 className="text-sm font-bold mb-2 text-gray-800 dark:text-white font-arabic">
+          <h3 className="text-sm font-bold mb-2 text-[#1f2937] dark:text-[#f9fafb] font-arabic">
             إجمالي المبيعات
           </h3>
-          <p className="text-xl font-bold text-sakura-50">
+          <p className="text-xl font-bold text-[#e57373]">
             {stats.totalSales.toLocaleString()} ريال
           </p>
           <p className="text-xs text-green-600 mt-1">
@@ -238,52 +238,52 @@ const DashboardContent: React.FC = () => {
           </p>
         </div>
         
-        <div className="glass-card text-center p-4 hover-lift">
+        <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-xl p-4 hover:shadow-lg transition-all duration-300 text-center">
           <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
             <span className="text-white text-xl">☕</span>
           </div>
-          <h3 className="text-sm font-bold mb-2 text-gray-800 dark:text-white font-arabic">
+          <h3 className="text-sm font-bold mb-2 text-[#1f2937] dark:text-[#f9fafb] font-arabic">
             المنتجات
           </h3>
-          <p className="text-xl font-bold text-sakura-50">
+          <p className="text-xl font-bold text-[#e57373]">
             {stats.totalProducts}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-[#6b7280] dark:text-[#9ca3af] mt-1">
             منتج نشط
           </p>
         </div>
         
-        <div className="glass-card text-center p-4 hover-lift">
+        <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-xl p-4 hover:shadow-lg transition-all duration-300 text-center">
           <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
             <span className="text-white text-xl">📋</span>
           </div>
-          <h3 className="text-sm font-bold mb-2 text-gray-800 dark:text-white font-arabic">
+          <h3 className="text-sm font-bold mb-2 text-[#1f2937] dark:text-[#f9fafb] font-arabic">
             الطلبات اليوم
           </h3>
-          <p className="text-xl font-bold text-sakura-50">
+          <p className="text-xl font-bold text-[#e57373]">
             {stats.todayOrders}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-[#6b7280] dark:text-[#9ca3af] mt-1">
             {stats.pendingOrders} في الانتظار
           </p>
         </div>
         
-        <div className="glass-card text-center p-4 hover-lift">
+        <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-xl p-4 hover:shadow-lg transition-all duration-300 text-center">
           <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
             <span className="text-white text-xl">👥</span>
           </div>
-          <h3 className="text-sm font-bold mb-2 text-gray-800 dark:text-white font-arabic">
+          <h3 className="text-sm font-bold mb-2 text-[#1f2937] dark:text-[#f9fafb] font-arabic">
             العملاء
           </h3>
-          <p className="text-xl font-bold text-sakura-50">
+          <p className="text-xl font-bold text-[#e57373]">
             {stats.totalCustomers}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-[#6b7280] dark:text-[#9ca3af] mt-1">
             عميل مسجل
           </p>
         </div>
       </div>
-
+      
       {/* Charts and Recent Orders */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue Chart */}
@@ -346,7 +346,7 @@ const DashboardContent: React.FC = () => {
           </div>
         </div>
       </div>
-
+      
       {/* Quick Actions */}
       <div className="glass-card p-6">
         <h3 className="text-lg font-bold text-gray-800 dark:text-white font-arabic mb-4">
@@ -450,7 +450,7 @@ const ProductsContent: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
+            <div>
           <h2 className="text-2xl md:text-3xl font-bold text-white font-arabic">
             إدارة المنتجات
           </h2>
@@ -722,7 +722,7 @@ const ProductsContent: React.FC = () => {
                 >
                   إضافة المنتج
                 </button>
-              </div>
+            </div>
             </form>
           </div>
         </div>
@@ -925,9 +925,9 @@ const OrdersContent: React.FC = () => {
                         </span>
                       </div>
                     ))}
-                  </div>
-                </div>
-              </div>
+      </div>
+    </div>
+  </div>
 
               <div className="flex flex-col items-end gap-3">
                 <div className="text-right">
@@ -939,8 +939,8 @@ const OrdersContent: React.FC = () => {
                       متوقع خلال {order.estimatedTime} دقيقة
                     </p>
                   )}
-                </div>
-
+    </div>
+    
                 <div className="flex gap-2">
                   {order.status === 'pending' && (
                     <button
@@ -973,12 +973,12 @@ const OrdersContent: React.FC = () => {
                     تفاصيل
                   </button>
                 </div>
-              </div>
+          </div>
             </div>
           </div>
         ))}
-      </div>
-
+        </div>
+        
       {/* Empty State */}
       {filteredOrders.length === 0 && (
         <div className="glass-card p-12 text-center">
@@ -1063,7 +1063,7 @@ const OrdersContent: React.FC = () => {
               </div>
 
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-gray-800 dark:text-white font-arabic">
                     المجموع الكلي:
                   </span>
@@ -1076,8 +1076,8 @@ const OrdersContent: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
-  );
+  </div>
+);
 };
 
 const UsersContent: React.FC = () => (

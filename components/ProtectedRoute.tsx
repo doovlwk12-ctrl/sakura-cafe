@@ -14,8 +14,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
     return <>{children}</>;
   }
 
-  const token = localStorage.getItem("admin_token");
-  const role = "admin"; // افتراض أن المستخدم المسجل هو admin
+  const token = localStorage.getItem("user_token");
+  const userData = localStorage.getItem("user_data");
+  const role = userData ? JSON.parse(userData).role : null;
 
   if (!token) {
     router.push("/admin");

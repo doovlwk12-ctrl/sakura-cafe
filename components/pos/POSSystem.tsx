@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import { productImages } from '../../data/productImages';
 import { useLanguage } from '../../hooks/LanguageProvider';
+import { useTheme } from '../../hooks/useTheme';
+import LanguageSwitcher from '../LanguageSwitcher';
+import ThemeToggle from '../ThemeToggle';
 
 interface OrderItem {
   id: string;
@@ -14,6 +17,7 @@ interface OrderItem {
 
 const POSSystem: React.FC = () => {
   const { t, isRTL } = useLanguage();
+  const { isDark } = useTheme();
   const [currentOrder, setCurrentOrder] = useState<OrderItem[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -21,11 +25,11 @@ const POSSystem: React.FC = () => {
   const [customerPhone, setCustomerPhone] = useState('');
 
   const categories = [
-    { id: 'all', label: t('all'), icon: '🍽️' },
-    { id: 'drinks', label: t('drinks'), icon: '☕' },
-    { id: 'sweets', label: t('sweets'), icon: '🍰' },
-    { id: 'sandwiches', label: t('sandwiches'), icon: '🥪' },
-    { id: 'groups', label: t('groups'), icon: '📦' }
+    { id: 'all', label: t('pos.all'), icon: '🍽️' },
+    { id: 'drinks', label: t('pos.drinks'), icon: '☕' },
+    { id: 'sweets', label: t('pos.sweets'), icon: '🍰' },
+    { id: 'sandwiches', label: t('pos.sandwiches'), icon: '🥪' },
+    { id: 'groups', label: t('pos.groups'), icon: '📦' }
   ];
 
   const filteredProducts = productImages.filter(product => {
@@ -81,17 +85,18 @@ const POSSystem: React.FC = () => {
     if (currentOrder.length === 0) return;
     
     // هنا يمكن إضافة منطق معالجة الدفع
-    alert('تم معالجة الدفع بنجاح!');
+    const message = isRTL ? 'تم معالجة الدفع بنجاح!' : 'Payment processed successfully!';
+    alert(message);
     clearOrder();
   };
 
   return (
-    <div className="min-h-screen new-system bg-background-light dark:bg-background-dark">
+    <div className="min-h-screen bg-[#fefefe] dark:bg-[#111827] transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 p-4">
+      <header className="bg-white dark:bg-[#1f2937] border-b border-gray-200 dark:border-[#374151] p-4 transition-colors duration-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-6 h-6 rounded-md overflow-hidden">
+            <div className="w-8 h-8 rounded-md overflow-hidden">
               <img 
                 src="/images/logo.png" 
                 alt="Sakura Cafe Logo" 
@@ -104,11 +109,15 @@ const POSSystem: React.FC = () => {
               />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-deep-50">نقطة البيع</h1>
-              <p className="text-deep-50 text-sm">نظام إدارة المبيعات</p>
+              <h1 className="text-2xl font-bold text-[#1f2937] dark:text-[#f9fafb] font-arabic">{t('pos.title')}</h1>
+              <p className="text-[#6b7280] dark:text-[#9ca3af] text-sm font-arabic">{t('pos.subtitle')}</p>
             </div>
           </div>
           
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher showText={false} />
+            <ThemeToggle showText={false} />
+          </div>
         </div>
       </header>
 
@@ -119,10 +128,10 @@ const POSSystem: React.FC = () => {
           <div className="mb-6 space-y-4">
             <input
               type="text"
-              placeholder="البحث في المنتجات..."
+              placeholder={t('pos.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="input w-full max-w-md"
+              className="w-full max-w-md px-4 py-3 border border-gray-300 dark:border-[#374151] rounded-lg bg-white dark:bg-[#1f2937] text-[#1f2937] dark:text-[#f9fafb] focus:ring-2 focus:ring-[#e57373] focus:border-transparent transition-all duration-300 font-arabic"
             />
             
             <div className="flex gap-2">
@@ -132,12 +141,12 @@ const POSSystem: React.FC = () => {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                     selectedCategory === category.id
-                      ? 'bg-[#C36C72] text-white'
-                      : 'bg-[#2A4842] text-gray-300 hover:bg-[#254740]'
+                      ? 'bg-[#e57373] text-white'
+                      : 'bg-white dark:bg-[#1f2937] text-[#6b7280] dark:text-[#9ca3af] hover:bg-[#fce7e7] dark:hover:bg-[#374151] hover:text-[#1f2937] dark:hover:text-[#f9fafb] border border-gray-200 dark:border-[#374151]'
                   }`}
                 >
                   <span>{category.icon}</span>
-                  <span>{category.label}</span>
+                  <span className="font-arabic">{category.label}</span>
                 </button>
               ))}
             </div>
@@ -148,14 +157,14 @@ const POSSystem: React.FC = () => {
             {filteredProducts.map(product => (
               <div
                 key={product.id}
-                className="card cursor-pointer hover:scale-105 transition-transform duration-200"
+                className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-xl p-4 cursor-pointer hover:scale-105 hover:shadow-lg transition-all duration-300"
                 onClick={() => addToOrder(product)}
               >
-                <div className="text-center p-4">
-                  <div className="w-20 h-20 mx-auto mb-3 rounded-lg overflow-hidden bg-gray-100">
+                <div className="text-center">
+                  <div className="w-20 h-20 mx-auto mb-3 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
                     <img
                       src={product.imagePath}
-                      alt={product.arabicName}
+                      alt={isRTL ? product.arabicName : product.englishName}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
@@ -163,14 +172,14 @@ const POSSystem: React.FC = () => {
                       }}
                     />
                   </div>
-                  <h3 className="font-bold mb-1 text-sm" style={{ color: 'var(--text-primary)' }}>
-                    {product.arabicName}
+                  <h3 className="font-bold mb-1 text-sm text-[#1f2937] dark:text-[#f9fafb] font-arabic">
+                    {isRTL ? product.arabicName : product.englishName}
                   </h3>
-                  <p className="text-xs mb-2" style={{ color: 'var(--text-secondary)' }}>
-                    {product.englishName}
+                  <p className="text-xs mb-2 text-[#6b7280] dark:text-[#9ca3af]">
+                    {isRTL ? product.englishName : product.arabicName}
                   </p>
-                  <div className="text-lg font-bold text-[#C36C72]">
-                    {product.price} ريال
+                  <div className="text-lg font-bold text-[#e57373]">
+                    {product.price} {t('pos.currency')}
                   </div>
                 </div>
               </div>
@@ -179,57 +188,57 @@ const POSSystem: React.FC = () => {
         </div>
 
         {/* Right Panel - Current Order */}
-        <div className="w-96 bg-[#2A4842] p-4 border-l border-[#C36C72]">
-          <h2 className="text-2xl font-bold text-white mb-6">الطلب الحالي</h2>
+        <div className="w-96 bg-white dark:bg-[#1f2937] p-4 border-l border-gray-200 dark:border-[#374151]">
+          <h2 className="text-2xl font-bold text-[#1f2937] dark:text-[#f9fafb] mb-6 font-arabic">{t('pos.currentOrder')}</h2>
           
           {/* Customer Info */}
-          <div className="card mb-4">
-            <h3 className="font-bold mb-3" style={{ color: 'var(--text-primary)' }}>معلومات العميل</h3>
+          <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-xl p-4 mb-4">
+            <h3 className="font-bold mb-3 text-[#1f2937] dark:text-[#f9fafb] font-arabic">{t('pos.customerInfo')}</h3>
             <div className="space-y-3">
               <input
                 type="text"
-                placeholder="اسم العميل"
+                placeholder={t('pos.customerName')}
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                className="input w-full"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-[#374151] rounded-lg bg-white dark:bg-[#1f2937] text-[#1f2937] dark:text-[#f9fafb] focus:ring-2 focus:ring-[#e57373] focus:border-transparent transition-all duration-300 font-arabic"
               />
               <input
                 type="tel"
-                placeholder="رقم الهاتف"
+                placeholder={t('pos.customerPhone')}
                 value={customerPhone}
                 onChange={(e) => setCustomerPhone(e.target.value)}
-                className="input w-full"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-[#374151] rounded-lg bg-white dark:bg-[#1f2937] text-[#1f2937] dark:text-[#f9fafb] focus:ring-2 focus:ring-[#e57373] focus:border-transparent transition-all duration-300 font-arabic"
               />
             </div>
           </div>
 
           {/* Order Items */}
-          <div className="card mb-4">
-            <h3 className="font-bold mb-3" style={{ color: 'var(--text-primary)' }}>العناصر</h3>
+          <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-xl p-4 mb-4">
+            <h3 className="font-bold mb-3 text-[#1f2937] dark:text-[#f9fafb] font-arabic">{t('pos.items')}</h3>
             <div className="space-y-3 max-h-64 overflow-y-auto">
               {currentOrder.map(item => (
-                <div key={item.id} className="flex items-center justify-between p-2 bg-[#1D453E] rounded-lg">
+                <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-[#374151] rounded-lg">
                   <div className="flex-1">
-                    <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
+                    <p className="font-medium text-sm text-[#1f2937] dark:text-[#f9fafb] font-arabic">
                       {item.name}
                     </p>
-                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                      {item.price} ريال × {item.quantity}
+                    <p className="text-xs text-[#6b7280] dark:text-[#9ca3af]">
+                      {item.price} {t('pos.currency')} × {item.quantity}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="w-6 h-6 bg-[#C36C72] text-white rounded-full flex items-center justify-center text-sm"
+                      className="w-6 h-6 bg-[#e57373] text-white rounded-full flex items-center justify-center text-sm hover:bg-[#d65a5a] transition-colors"
                     >
                       -
                     </button>
-                    <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                    <span className="text-sm font-medium text-[#1f2937] dark:text-[#f9fafb]">
                       {item.quantity}
                     </span>
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="w-6 h-6 bg-[#C36C72] text-white rounded-full flex items-center justify-center text-sm"
+                      className="w-6 h-6 bg-[#e57373] text-white rounded-full flex items-center justify-center text-sm hover:bg-[#d65a5a] transition-colors"
                     >
                       +
                     </button>
@@ -238,32 +247,32 @@ const POSSystem: React.FC = () => {
               ))}
               
               {currentOrder.length === 0 && (
-                <p className="text-center text-gray-500 py-4">
-                  لا توجد عناصر في الطلب
+                <p className="text-center text-[#6b7280] dark:text-[#9ca3af] py-4 font-arabic">
+                  {t('pos.noItems')}
                 </p>
               )}
             </div>
           </div>
 
           {/* Order Summary */}
-          <div className="card mb-4">
+          <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-xl p-4 mb-4">
             <div className="flex justify-between items-center mb-2">
-              <span style={{ color: 'var(--text-primary)' }}>المجموع:</span>
-              <span className="text-xl font-bold text-[#C36C72]">
-                {calculateTotal()} ريال
+              <span className="text-[#1f2937] dark:text-[#f9fafb] font-arabic">{t('pos.subtotal')}:</span>
+              <span className="text-xl font-bold text-[#e57373]">
+                {calculateTotal()} {t('pos.currency')}
               </span>
             </div>
             <div className="flex justify-between items-center mb-2">
-              <span style={{ color: 'var(--text-primary)' }}>الضريبة (15%):</span>
-              <span className="text-[#C36C72]">
-                {(calculateTotal() * 0.15).toFixed(2)} ريال
+              <span className="text-[#1f2937] dark:text-[#f9fafb] font-arabic">{t('pos.taxAmount')}:</span>
+              <span className="text-[#e57373]">
+                {(calculateTotal() * 0.15).toFixed(2)} {t('pos.currency')}
               </span>
             </div>
-            <div className="border-t border-[#C36C72] pt-2">
+            <div className="border-t border-gray-200 dark:border-[#374151] pt-2">
               <div className="flex justify-between items-center">
-                <span className="font-bold" style={{ color: 'var(--text-primary)' }}>المجموع النهائي:</span>
-                <span className="text-2xl font-bold text-[#C36C72]">
-                  {(calculateTotal() * 1.15).toFixed(2)} ريال
+                <span className="font-bold text-[#1f2937] dark:text-[#f9fafb] font-arabic">{t('pos.grandTotal')}:</span>
+                <span className="text-2xl font-bold text-[#e57373]">
+                  {(calculateTotal() * 1.15).toFixed(2)} {t('pos.currency')}
                 </span>
               </div>
             </div>
@@ -274,17 +283,17 @@ const POSSystem: React.FC = () => {
             <button
               onClick={processPayment}
               disabled={currentOrder.length === 0}
-              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-6 py-3 bg-[#e57373] text-white rounded-lg font-medium hover:bg-[#d65a5a] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-arabic"
             >
-              معالجة الدفع
+              {t('pos.processPayment')}
             </button>
             
             <button
               onClick={clearOrder}
               disabled={currentOrder.length === 0}
-              className="btn-secondary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-6 py-3 bg-gray-200 dark:bg-[#374151] text-[#1f2937] dark:text-[#f9fafb] rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-[#4b5563] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-arabic"
             >
-              مسح الطلب
+              {t('pos.clearOrder')}
             </button>
           </div>
         </div>

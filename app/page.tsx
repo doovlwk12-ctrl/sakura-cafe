@@ -10,7 +10,7 @@ import Footer from '@/components/Footer'
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-deep-50 dark:bg-gray-900">
+    <main className="min-h-screen bg-[#fefefe] dark:bg-[#111827] transition-colors duration-300">
       <SimpleNavbar />
       
       <div className="pt-16">
