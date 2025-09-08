@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { EyeIcon, EyeSlashIcon, UserIcon, LockClosedIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 import { useLanguage } from '../../hooks/LanguageProvider';
+import { useAuth } from '../AuthProvider';
 
 const AdminLogin: React.FC = () => {
   const { t, isRTL } = useLanguage();
   const router = useRouter();
+  const { login } = useAuth();
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
@@ -54,19 +56,18 @@ const AdminLogin: React.FC = () => {
         } else {
           // Second step: 2FA verification
           if (credentials.twoFactorCode === '123456') {
-            // Store admin session
-            localStorage.setItem('adminSession', JSON.stringify({
-              username: credentials.username,
-              role: 'admin',
-              loginTime: new Date().toISOString(),
-              permissions: ['dashboard', 'products', 'orders', 'users', 'reports', 'settings']
-            }));
-            
-            // Reset attempts
-            setLoginAttempts(0);
-            
-            // Redirect to admin dashboard
-            router.push('/admin');
+            try {
+              // Use AuthProvider login method
+              await login(credentials.username, credentials.password, 'admin');
+              
+              // Reset attempts
+              setLoginAttempts(0);
+              
+              // Redirect to admin dashboard
+              router.push('/admin');
+            } catch (err) {
+              setError('حدث خطأ في تسجيل الدخول');
+            }
           } else {
             setError('رمز التحقق غير صحيح');
             setLoginAttempts(prev => prev + 1);

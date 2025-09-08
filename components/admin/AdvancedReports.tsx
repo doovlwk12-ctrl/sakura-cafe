@@ -7,8 +7,8 @@ import {
   CurrencyDollarIcon,
   ShoppingBagIcon,
   UsersIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowArrowTrendingUpIcon,
+  ArrowArrowTrendingDownIcon,
   CalendarIcon,
   ArrowDownTrayIcon,
   EyeIcon
@@ -150,9 +150,9 @@ const AdvancedReports: React.FC = () => {
 
   const getChangeIcon = (changeType: string) => {
     return changeType === 'increase' ? (
-      <TrendingUpIcon className="w-4 h-4 text-green-500" />
+      <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" />
     ) : (
-      <TrendingDownIcon className="w-4 h-4 text-red-500" />
+      <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
     );
   };
 

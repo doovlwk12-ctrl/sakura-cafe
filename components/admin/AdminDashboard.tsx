@@ -8,7 +8,7 @@ import UserManagement from './UserManagement';
 import AdvancedReports from './AdvancedReports';
 import InventoryManagement from './InventoryManagement';
 import RealTimeNotifications from '../RealTimeNotifications';
-import { useLanguage } from '../hooks/LanguageProvider';
+import { useLanguage } from '../../hooks/LanguageProvider';
 
 const AdminDashboard: React.FC = () => {
   const { logout, user } = useAuth();
