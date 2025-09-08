@@ -1133,6 +1133,12 @@ class Database {
 // إنشاء instance واحد من قاعدة البيانات
 export const db = new Database();
 
+// تصدير المصفوفات للاستخدام المباشر في API
+export const products = db['products'];
+export const orders = db['orders'];
+export const users = db['users'];
+export const branches = db['branches'];
+
 // دالة مساعدة للتحقق من صحة البيانات
 export const validateCartItem = (item: any): boolean => {
   return !!(

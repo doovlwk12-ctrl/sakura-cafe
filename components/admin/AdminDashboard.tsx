@@ -11,6 +11,7 @@ import RealTimeNotifications from '../RealTimeNotifications';
 import { useLanguage } from '../../hooks/LanguageProvider';
 import { useProducts } from '../../hooks/useProducts';
 import { productImages } from '../../data/productImages';
+import { useRealTimeData } from '../../hooks/useRealTimeData';
 
 const AdminDashboard: React.FC = () => {
   const { logout, user } = useAuth();
@@ -144,43 +145,29 @@ const AdminDashboard: React.FC = () => {
 // مكونات المحتوى
 const DashboardContent: React.FC = () => {
   const { t, isRTL } = useLanguage();
-  const [stats, setStats] = useState({
-    totalSales: 12450,
-    totalProducts: 47,
-    todayOrders: 23,
-    totalCustomers: 156,
-    pendingOrders: 8,
-    completedOrders: 15,
-    revenue: 3450,
-    growth: 12.5
-  });
+  const { stats, orders, refreshStats } = useRealTimeData();
 
-  const [recentOrders, setRecentOrders] = useState([
-    {
-      id: '1234',
-      customer: 'أحمد محمد',
-      items: 'لاتيه + كرواسون',
-      amount: 25,
-      status: 'ready',
-      time: '10:30 ص'
-    },
-    {
-      id: '1235',
-      customer: 'فاطمة علي',
-      items: 'كابتشينو + براوني',
-      amount: 30,
-      status: 'preparing',
-      time: '10:15 ص'
-    },
-    {
-      id: '1236',
-      customer: 'محمد السعد',
-      items: 'أمريكانو + كيك',
-      amount: 22,
-      status: 'pending',
-      time: '10:00 ص'
-    }
-  ]);
+  // تحديث الإحصائيات عند التحميل
+  useEffect(() => {
+    refreshStats();
+    
+    // تحديث الإحصائيات كل 30 ثانية
+    const interval = setInterval(refreshStats, 30000);
+    return () => clearInterval(interval);
+  }, [refreshStats]);
+
+  // استخدام الطلبات من البيانات في الوقت الفعلي
+  const recentOrders = orders.slice(0, 5).map((order: any) => ({
+    id: order.id,
+    customer: order.customer_name,
+    items: order.items?.map((item: any) => `${item.product_name}`).join(' + ') || 'غير محدد',
+    amount: order.total,
+    status: order.status,
+    time: new Date(order.created_at).toLocaleTimeString('ar-SA', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    })
+  }));
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -386,48 +373,119 @@ const DashboardContent: React.FC = () => {
 
 const ProductsContent: React.FC = () => {
   const { t, isRTL } = useLanguage();
-  const [products, setProducts] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { products, addProduct, updateProduct, deleteProduct } = useRealTimeData();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [editingProduct, setEditingProduct] = useState<any>(null);
 
-  // جلب المنتجات من قاعدة البيانات أو استخدام المنتجات المحلية
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        // تحويل منتجات productImages إلى تنسيق مناسب للإدارة
-        const formattedProducts = productImages.map(product => ({
-          id: product.id,
-          name: product.englishName,
-          nameAr: product.arabicName,
-          description: `Delicious ${product.englishName}`,
-          descriptionAr: `${product.arabicName} لذيذ`,
-          category: product.category,
-          price: product.price,
-          calories: product.calories,
-          imagePath: product.imagePath,
-          status: 'active',
-          stock: Math.floor(Math.random() * 100) + 10, // مخزون عشوائي للعرض
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }));
-        
-        setProducts(formattedProducts);
-      } catch (error) {
-        console.error('خطأ في جلب المنتجات:', error);
-        setError('فشل في تحميل المنتجات');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [newProduct, setNewProduct] = useState({
+    nameAr: '',
+    name: '',
+    category: '',
+    price: 0,
+    calories: 0,
+    stock: 0,
+    descriptionAr: '',
+    description: '',
+    imagePath: ''
+  });
+
+  // إضافة منتج جديد
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const success = await addProduct(newProduct);
+      
+      if (success) {
+        setNewProduct({
+          nameAr: '',
+          name: '',
+          category: '',
+          price: 0,
+          calories: 0,
+          stock: 0,
+          descriptionAr: '',
+          description: '',
+          imagePath: ''
+        });
+        setShowAddModal(false);
+        alert('تم إضافة المنتج بنجاح!');
+      } else {
+        alert('فشل في إضافة المنتج');
+      }
+    } catch (error) {
+      console.error('خطأ في إضافة المنتج:', error);
+      alert('فشل في إضافة المنتج');
+    }
+  };
+
+  // تعديل منتج
+  const handleEditProduct = (product: any) => {
+    setEditingProduct(product);
+    setNewProduct({
+      nameAr: product.nameAr,
+      name: product.name,
+      category: product.category,
+      price: product.price,
+      calories: product.calories,
+      stock: product.stock,
+      descriptionAr: product.descriptionAr,
+      description: product.description,
+      imagePath: product.imagePath
+    });
+    setShowAddModal(true);
+  };
+
+  // حفظ تعديل المنتج
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const success = await updateProduct(editingProduct.id, newProduct);
+      
+      if (success) {
+        setEditingProduct(null);
+        setNewProduct({
+          nameAr: '',
+          name: '',
+          category: '',
+          price: 0,
+          calories: 0,
+          stock: 0,
+          descriptionAr: '',
+          description: '',
+          imagePath: ''
+        });
+        setShowAddModal(false);
+        alert('تم تحديث المنتج بنجاح!');
+      } else {
+        alert('فشل في تحديث المنتج');
+      }
+    } catch (error) {
+      console.error('خطأ في تحديث المنتج:', error);
+      alert('فشل في تحديث المنتج');
+    }
+  };
+
+  // حذف منتج
+  const handleDeleteProduct = async (productId: string) => {
+    if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+      try {
+        const success = await deleteProduct(productId);
+        
+        if (success) {
+          alert('تم حذف المنتج بنجاح!');
+        } else {
+          alert('فشل في حذف المنتج');
+        }
+      } catch (error) {
+        console.error('خطأ في حذف المنتج:', error);
+        alert('فشل في حذف المنتج');
+      }
+    }
+  };
 
   const categories = [
     { id: 'all', name: 'All', nameAr: 'الكل' },
@@ -584,10 +642,18 @@ const ProductsContent: React.FC = () => {
                   {product.price} {t('admin.products.price')}
                 </span>
                 <div className="flex gap-2">
-                  <button className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors">
+                  <button 
+                    onClick={() => handleEditProduct(product)}
+                    className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                    title="تعديل المنتج"
+                  >
                     <span className="text-sm">✏️</span>
                   </button>
-                  <button className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors">
+                  <button 
+                    onClick={() => handleDeleteProduct(product.id)}
+                    className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                    title="حذف المنتج"
+                  >
                     <span className="text-sm">🗑️</span>
                   </button>
                 </div>
@@ -627,17 +693,31 @@ const ProductsContent: React.FC = () => {
           <div className="glass-card p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-800 dark:text-white font-arabic">
-                إضافة منتج جديد
+                {editingProduct ? 'تعديل المنتج' : 'إضافة منتج جديد'}
               </h3>
               <button 
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  setShowAddModal(false);
+                  setEditingProduct(null);
+                  setNewProduct({
+                    nameAr: '',
+                    name: '',
+                    category: '',
+                    price: 0,
+                    calories: 0,
+                    stock: 0,
+                    descriptionAr: '',
+                    description: '',
+                    imagePath: ''
+                  });
+                }}
                 className="text-gray-500 hover:text-gray-700 text-2xl"
               >
                 ×
               </button>
             </div>
 
-            <form className="space-y-4">
+            <form onSubmit={editingProduct ? handleSaveEdit : handleAddProduct} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 font-arabic mb-2">
@@ -647,6 +727,9 @@ const ProductsContent: React.FC = () => {
                     type="text" 
                     className="input-field"
                     placeholder="أدخل اسم المنتج بالعربية"
+                    value={newProduct.nameAr}
+                    onChange={(e) => setNewProduct({...newProduct, nameAr: e.target.value})}
+                    required
                   />
                 </div>
                 <div>
@@ -657,6 +740,9 @@ const ProductsContent: React.FC = () => {
                     type="text" 
                     className="input-field"
                     placeholder="Enter product name in English"
+                    value={newProduct.name}
+                    onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                    required
                   />
                 </div>
               </div>
@@ -666,7 +752,12 @@ const ProductsContent: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 font-arabic mb-2">
                     الفئة
                   </label>
-                  <select className="input-field">
+                  <select 
+                    className="input-field"
+                    value={newProduct.category}
+                    onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
+                    required
+                  >
                     <option value="">اختر الفئة</option>
                     {categories.slice(1).map(category => (
                       <option key={category.id} value={category.id}>
@@ -684,6 +775,9 @@ const ProductsContent: React.FC = () => {
                     className="input-field"
                     placeholder="0.00"
                     step="0.01"
+                    value={newProduct.price}
+                    onChange={(e) => setNewProduct({...newProduct, price: parseFloat(e.target.value) || 0})}
+                    required
                   />
                 </div>
               </div>
@@ -697,6 +791,8 @@ const ProductsContent: React.FC = () => {
                     type="number" 
                     className="input-field"
                     placeholder="0"
+                    value={newProduct.calories}
+                    onChange={(e) => setNewProduct({...newProduct, calories: parseInt(e.target.value) || 0})}
                   />
                 </div>
                 <div>
@@ -707,6 +803,8 @@ const ProductsContent: React.FC = () => {
                     type="number" 
                     className="input-field"
                     placeholder="0"
+                    value={newProduct.stock}
+                    onChange={(e) => setNewProduct({...newProduct, stock: parseInt(e.target.value) || 0})}
                   />
                 </div>
               </div>
@@ -719,6 +817,8 @@ const ProductsContent: React.FC = () => {
                   className="input-field"
                   rows={3}
                   placeholder="أدخل وصف المنتج بالعربية"
+                  value={newProduct.descriptionAr}
+                  onChange={(e) => setNewProduct({...newProduct, descriptionAr: e.target.value})}
                 />
               </div>
 
@@ -769,53 +869,9 @@ const ProductsContent: React.FC = () => {
 
 const OrdersContent: React.FC = () => {
   const { t, isRTL } = useLanguage();
-  const [orders, setOrders] = useState([
-    {
-      id: '1234',
-      customerName: 'أحمد محمد',
-      customerPhone: '+966501234567',
-      items: [
-        { name: 'لاتيه', quantity: 2, price: 18 },
-        { name: 'كرواسون', quantity: 1, price: 12 }
-      ],
-      total: 48,
-      status: 'preparing',
-      orderType: 'pickup',
-      branch: 'فرع صديان',
-      createdAt: new Date('2024-01-15T10:30:00'),
-      estimatedTime: 15
-    },
-    {
-      id: '1235',
-      customerName: 'فاطمة علي',
-      customerPhone: '+966501234568',
-      items: [
-        { name: 'كابتشينو', quantity: 1, price: 16 },
-        { name: 'براوني', quantity: 1, price: 14 }
-      ],
-      total: 30,
-      status: 'ready',
-      orderType: 'delivery',
-      branch: 'فرع النقرة',
-      createdAt: new Date('2024-01-15T10:15:00'),
-      estimatedTime: 0
-    },
-    {
-      id: '1236',
-      customerName: 'محمد السعد',
-      customerPhone: '+966501234569',
-      items: [
-        { name: 'أمريكانو', quantity: 1, price: 14 },
-        { name: 'كيك', quantity: 1, price: 8 }
-      ],
-      total: 22,
-      status: 'pending',
-      orderType: 'pickup',
-      branch: 'فرع الجامعيين',
-      createdAt: new Date('2024-01-15T10:00:00'),
-      estimatedTime: 20
-    }
-  ]);
+  const { orders, updateOrderStatus } = useRealTimeData();
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+
 
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -856,10 +912,19 @@ const OrdersContent: React.FC = () => {
     return isRTL ? statusObj?.nameAr : statusObj?.name;
   };
 
-  const updateOrderStatus = (orderId: string, newStatus: string) => {
-    setOrders(orders.map(order => 
-      order.id === orderId ? { ...order, status: newStatus } : order
-    ));
+  const handleUpdateOrderStatus = async (orderId: string, newStatus: string) => {
+    try {
+      const success = await updateOrderStatus(orderId, newStatus);
+      
+      if (success) {
+        alert('تم تحديث حالة الطلب بنجاح!');
+      } else {
+        alert('فشل في تحديث حالة الطلب');
+      }
+    } catch (error) {
+      console.error('خطأ في تحديث حالة الطلب:', error);
+      alert('فشل في تحديث حالة الطلب');
+    }
   };
 
   const formatTime = (date: Date) => {
@@ -951,10 +1016,10 @@ const OrdersContent: React.FC = () => {
                     المنتجات:
                   </p>
                   <div className="space-y-1">
-                    {order.items.map((item, index) => (
+                    {order.items.map((item: any, index: number) => (
                       <div key={index} className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400 font-arabic">
-                          {item.quantity}x {item.name}
+                          {item.quantity}x {item.product_name}
                         </span>
                         <span className="text-gray-800 dark:text-white">
                           {item.price * item.quantity} ريال
@@ -980,7 +1045,7 @@ const OrdersContent: React.FC = () => {
                 <div className="flex gap-2">
                   {order.status === 'pending' && (
                     <button
-                      onClick={() => updateOrderStatus(order.id, 'preparing')}
+                      onClick={() => handleUpdateOrderStatus(order.id, 'preparing')}
                       className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-sm hover:bg-yellow-200 transition-colors font-arabic"
                     >
                       بدء التحضير
@@ -988,7 +1053,7 @@ const OrdersContent: React.FC = () => {
                   )}
                   {order.status === 'preparing' && (
                     <button
-                      onClick={() => updateOrderStatus(order.id, 'ready')}
+                      onClick={() => handleUpdateOrderStatus(order.id, 'ready')}
                       className="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm hover:bg-green-200 transition-colors font-arabic"
                     >
                       جاهز
@@ -996,7 +1061,7 @@ const OrdersContent: React.FC = () => {
                   )}
                   {order.status === 'ready' && (
                     <button
-                      onClick={() => updateOrderStatus(order.id, 'delivered')}
+                      onClick={() => handleUpdateOrderStatus(order.id, 'delivered')}
                       className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-sm hover:bg-purple-200 transition-colors font-arabic"
                     >
                       تم التوصيل
