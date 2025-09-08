@@ -126,7 +126,7 @@ const mockUsers: User[] = [
     fullName: 'أحمد سالم',
     phone: '+966501234567',
     email: 'ahmed@example.com',
-    joinDate: '2024-01-15',
+    joinDate: '2025-01-15',
     loyaltyPoints: 250,
     totalOrders: 12,
     favoriteItems: ['latte', 'croissant', 'tiramisu'],
@@ -143,7 +143,7 @@ const mockUsers: User[] = [
     fullName: 'سارة علي',
     phone: '+966507654321',
     email: 'sara@example.com',
-    joinDate: '2024-02-20',
+    joinDate: '2025-01-20',
     loyaltyPoints: 180,
     totalOrders: 8,
     favoriteItems: ['cappuccino', 'cheesecake'],
@@ -233,16 +233,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (userData: RegisterData) => {
     try {
-      // محاولة التسجيل عبر الـ API الحقيقي أولاً
-      const response = await authAPI.register(userData);
-      const { token, user } = response.data;
+      // محاولة التسجيل عبر الـ API الجديد
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: userData.username,
+          fullName: userData.fullName,
+          email: userData.email,
+          phone: userData.phone,
+          password: userData.password
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'فشل في إنشاء الحساب');
+      }
+
+      const result = await response.json();
+      const newUser = result.user;
+
+      // إنشاء توكن للمستخدم الجديد
+      const token = `customer_token_${Date.now()}`;
       
       // حفظ بيانات المستخدم
       localStorage.setItem('user_token', token);
-      localStorage.setItem('user_data', JSON.stringify(user));
+      localStorage.setItem('user_data', JSON.stringify(newUser));
       
       setIsAuthenticated(true);
-      setUser(user);
+      setUser(newUser);
       
       return;
     } catch (error) {

@@ -6,6 +6,7 @@ export interface PaymentMethod {
   enabled: boolean;
   config?: any;
   icon?: string;
+  image?: string;
   description?: string;
 }
 
@@ -25,6 +26,7 @@ export const getPaymentMethods = (t: (key: string) => string): PaymentMethod[] =
     type: 'cash',
     enabled: true,
     icon: '💵',
+    image: '/images/Images-Pay/Cash-Pay-Image.svg',
     description: t('cart.cash')
   },
   {
@@ -33,6 +35,7 @@ export const getPaymentMethods = (t: (key: string) => string): PaymentMethod[] =
     type: 'card',
     enabled: true,
     icon: '💳',
+    image: '/images/Images-Pay/Mada-Pay-Image.jpg',
     description: t('payment.mada'),
     config: {
       gateway: 'tap',
@@ -46,6 +49,7 @@ export const getPaymentMethods = (t: (key: string) => string): PaymentMethod[] =
     type: 'card',
     enabled: true,
     icon: '💳',
+    image: '/images/Images-Pay/VISA-Pay-Image.png',
     description: t('payment.visa'),
     config: {
       gateway: 'tap',
@@ -59,6 +63,7 @@ export const getPaymentMethods = (t: (key: string) => string): PaymentMethod[] =
     type: 'card',
     enabled: true,
     icon: '💳',
+    image: '/images/Images-Pay/Mastercard-Pay-Image.png',
     description: t('payment.mastercard'),
     config: {
       gateway: 'tap',
@@ -72,6 +77,7 @@ export const getPaymentMethods = (t: (key: string) => string): PaymentMethod[] =
     type: 'digital_wallet',
     enabled: true,
     icon: '📱',
+    image: '/images/Images-Pay/STC Pay-Image.png',
     description: t('payment.stcPay'),
     config: {
       gateway: 'myfatoorah',
@@ -85,6 +91,7 @@ export const getPaymentMethods = (t: (key: string) => string): PaymentMethod[] =
     type: 'wallet',
     enabled: true,
     icon: '📱',
+    image: '/images/Images-Pay/Samsung Wallet-Image.jpg',
     description: t('payment.samsungWallet'),
     config: {
       gateway: 'tap',
@@ -98,6 +105,7 @@ export const getPaymentMethods = (t: (key: string) => string): PaymentMethod[] =
     type: 'wallet',
     enabled: true,
     icon: '🍎',
+    image: '/images/Images-Pay/Apple Pay-Imgae.png',
     description: t('payment.applePay'),
     config: {
       gateway: 'tap',
@@ -111,6 +119,7 @@ export const getPaymentMethods = (t: (key: string) => string): PaymentMethod[] =
     type: 'wallet',
     enabled: true,
     icon: '📱',
+    image: '/images/Images-Pay/Google Pay-Image.png',
     description: t('payment.googlePay'),
     config: {
       gateway: 'tap',
@@ -226,7 +235,7 @@ export const processApplePayPayment = async (
 ): Promise<PaymentResult> => {
   try {
     // Check if Apple Pay is available
-    if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
+    if (!(window as any).ApplePaySession || !(window as any).ApplePaySession.canMakePayments()) {
       return {
         success: false,
         error: 'Apple Pay is not available on this device',
@@ -234,7 +243,7 @@ export const processApplePayPayment = async (
     }
 
     // Create Apple Pay session
-    const session = new ApplePaySession(3, {
+    const session = new (window as any).ApplePaySession(3, {
       countryCode: 'SA',
       currencyCode: currency,
       supportedNetworks: ['visa', 'masterCard', 'amex', 'mada'],
@@ -246,7 +255,7 @@ export const processApplePayPayment = async (
     });
 
     return new Promise((resolve) => {
-      session.onvalidatemerchant = async (event) => {
+      session.onvalidatemerchant = async (event: any) => {
         try {
           const response = await fetch('/api/payments/apple-pay/validate', {
             method: 'POST',
@@ -269,7 +278,7 @@ export const processApplePayPayment = async (
         }
       };
 
-      session.onpaymentauthorized = async (event) => {
+      session.onpaymentauthorized = async (event: any) => {
         try {
           const response = await fetch('/api/payments/apple-pay/process', {
             method: 'POST',
@@ -285,20 +294,20 @@ export const processApplePayPayment = async (
           const result = await response.json();
 
           if (result.success) {
-            session.completePayment(ApplePaySession.STATUS_SUCCESS);
+            session.completePayment((window as any).ApplePaySession.STATUS_SUCCESS);
             resolve({
               success: true,
               transactionId: result.transactionId,
             });
           } else {
-            session.completePayment(ApplePaySession.STATUS_FAILURE);
+            session.completePayment((window as any).ApplePaySession.STATUS_FAILURE);
             resolve({
               success: false,
               error: result.error || 'Apple Pay payment failed',
             });
           }
         } catch (error) {
-          session.completePayment(ApplePaySession.STATUS_FAILURE);
+          session.completePayment((window as any).ApplePaySession.STATUS_FAILURE);
           resolve({
             success: false,
             error: 'Apple Pay processing failed',
@@ -330,14 +339,14 @@ export const processGooglePayPayment = async (
 ): Promise<PaymentResult> => {
   try {
     // Check if Google Pay is available
-    if (!window.google || !window.google.payments) {
+    if (!(window as any).google || !(window as any).google.payments) {
       return {
         success: false,
         error: 'Google Pay is not available',
       };
     }
 
-    const paymentsClient = new window.google.payments.api.PaymentsClient({
+    const paymentsClient = new (window as any).google.payments.api.PaymentsClient({
       environment: process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'TEST',
     });
 
@@ -439,8 +448,8 @@ export const processPayment = async (
 
 // Check if payment method is available
 export const isPaymentMethodAvailable = (method: string): boolean => {
-  const paymentMethod = PAYMENT_METHODS.find(m => m.id === method);
-  return paymentMethod ? paymentMethod.enabled : false;
+  const availableMethods = ['cash', 'card', 'mada', 'stcpay', 'applepay', 'googlepay'];
+  return availableMethods.includes(method);
 };
 
 // Get available payment methods

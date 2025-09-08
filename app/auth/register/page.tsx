@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { EyeIcon, EyeSlashIcon, UserIcon, LockClosedIcon, EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline'
 import { useAuth } from '../../../components/AuthProvider'
@@ -28,6 +28,19 @@ const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // تحميل البيانات المحفوظة عند تحميل الصفحة
+  useEffect(() => {
+    const savedData = localStorage.getItem('registerFormData')
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData)
+        setFormData(parsedData)
+      } catch (error) {
+        console.error('Error parsing saved form data:', error)
+      }
+    }
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -47,19 +60,18 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      const success = await register({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+      await register({
+        username: formData.email, // استخدام الإيميل كاسم مستخدم
+        fullName: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
         phone: formData.phone,
         password: formData.password
       })
       
-      if (success) {
-        router.push('/')
-      } else {
-        setError(t('auth.registrationError'))
-      }
+      // مسح البيانات المحفوظة بعد التسجيل بنجاح
+      localStorage.removeItem('registerFormData')
+      
+      router.push('/')
     } catch (error) {
       setError(t('auth.registrationError'))
     } finally {
@@ -68,10 +80,14 @@ const RegisterPage: React.FC = () => {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
+    const newFormData = {
       ...formData,
       [e.target.name]: e.target.value
-    })
+    }
+    setFormData(newFormData)
+    
+    // حفظ البيانات في localStorage
+    localStorage.setItem('registerFormData', JSON.stringify(newFormData))
   }
 
   return (

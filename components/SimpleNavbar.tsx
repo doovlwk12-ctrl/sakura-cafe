@@ -233,7 +233,7 @@ const SimpleNavbar: React.FC = () => {
                         {user?.role === 'customer' && (
                           <div className="py-2">
                             <Link 
-                              href="/profile"
+                              href="/account/profile"
                               className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-arabic"
                               onClick={() => setShowAccountMenu(false)}
                             >
@@ -241,7 +241,7 @@ const SimpleNavbar: React.FC = () => {
                               {t('navbar.profile')}
                             </Link>
                             <Link 
-                              href="/orders"
+                              href="/account/orders"
                               className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-arabic"
                               onClick={() => setShowAccountMenu(false)}
                             >
@@ -249,7 +249,7 @@ const SimpleNavbar: React.FC = () => {
                               {t('navbar.myOrders')}
                             </Link>
                   <Link
-                              href="/rewards"
+                              href="/account/rewards"
                               className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-arabic"
                               onClick={() => setShowAccountMenu(false)}
                             >
@@ -296,8 +296,7 @@ const SimpleNavbar: React.FC = () => {
                             className="w-full px-4 py-2.5 border-2 border-sakura-50 text-sakura-50 rounded-lg text-sm font-arabic font-medium hover:bg-sakura-50/10 transition-colors"
                             onClick={() => {
                               setShowAccountMenu(false)
-                              // TODO: إضافة modal للتسجيل
-                              alert('قريباً: نموذج إنشاء حساب جديد')
+                              window.location.href = '/auth/register'
                             }}
                           >
                             {t('navbar.createAccount')}

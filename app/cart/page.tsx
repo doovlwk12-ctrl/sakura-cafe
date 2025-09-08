@@ -38,10 +38,25 @@ export default function CartPage() {
     branchId: 'branch-001',
     branchName: 'فرع صديان',
     deliveryAddress: '',
-    notes: '',
     usePoints: false,
-    customerPhone: ''
+    customerPhone: '',
+    appliedDiscount: null as any
   })
+
+  const [cartData, setCartData] = React.useState<any>(null)
+  const [isLoadingCart, setIsLoadingCart] = React.useState(false)
+  const [isApplyingReward, setIsApplyingReward] = React.useState(false)
+
+  // دالة لتحويل التاريخ إلى التقويم الهجري
+  const convertToHijri = (date: Date): string => {
+    const hijriDate = new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    }).format(date);
+    
+    return hijriDate;
+  }
 
   const [availablePaymentMethods, setAvailablePaymentMethods] = React.useState(getAvailablePaymentMethods(t))
 
@@ -50,11 +65,56 @@ export default function CartPage() {
     setAvailablePaymentMethods(getAvailablePaymentMethods(t))
   }, [language, t])
 
+  // جلب بيانات سلة التسوق مع المكافآت
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      fetchCartData()
+    }
+  }, [isAuthenticated])
+
+  // تحديث بيانات السلة عند تغيير المنتجات
+  React.useEffect(() => {
+    if (isAuthenticated && items.length > 0) {
+      fetchCartData()
+    }
+  }, [items, isAuthenticated])
+
+  const fetchCartData = async () => {
+    try {
+      setIsLoadingCart(true)
+      const token = localStorage.getItem('user_token')
+      const userData = JSON.parse(localStorage.getItem('user_data') || '{}')
+
+      console.log('🛒 جلب بيانات سلة التسوق مع المكافآت للمستخدم:', userData.id)
+
+      const response = await fetch('/api/cart/items', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'user-id': userData.id
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('✅ تم جلب بيانات سلة التسوق مع المكافآت:', data)
+        setCartData(data)
+      } else {
+        console.error('❌ فشل في جلب بيانات سلة التسوق:', response.status)
+      }
+    } catch (error) {
+      console.error('Error fetching cart data:', error)
+    } finally {
+      setIsLoadingCart(false)
+    }
+  }
+
   const branches = [
-    { id: 'branch-001', name: 'فرع صديان', address: 'صديان، حائل' },
-    { id: 'branch-002', name: 'فرع النقرة', address: 'النقرة، حائل' },
-    { id: 'branch-003', name: 'فرع الجامعيين', address: 'الجامعيين، حائل' },
-    { id: 'branch-004', name: 'فرع طريق المدينة', address: 'طريق المدينة، حائل' }
+    { id: 'branch-001', name: 'فرع صديان', address: 'طريق الملك فهد الدائري المنتزه الشرقي، حائل 55428' },
+    { id: 'branch-002', name: 'فرع النقرة', address: 'فهد العلى العريفي النقرة، حائل 55431' },
+    { id: 'branch-003', name: 'فرع الجامعيين', address: 'المطار حائل 55421' },
+    { id: 'branch-004', name: 'فرع طريق المدينة', address: 'طريق المدينة، النقرة، حائل 55433' },
+    { id: 'branch-005', name: 'فرع الراجحي', address: '3335 خليفة رسول الله ابو بكر الصديق، حي النقرة، حائل 55433' },
+    { id: 'branch-006', name: 'فرع فجر', address: 'حائل GJ4P+QW9' }
   ]
 
   const handleCheckout = async () => {
@@ -94,14 +154,12 @@ export default function CartPage() {
       const order = await createOrder({
         items: orderItems,
         totalAmount: finalPrice,
-        paymentMethod: checkoutData.paymentMethod,
+        paymentMethod: checkoutData.paymentMethod as 'card' | 'cash' | 'wallet',
         branchId: checkoutData.branchId,
         branchName: checkoutData.branchName,
         orderType: checkoutData.orderType,
         deliveryAddress: checkoutData.deliveryAddress,
-        notes: checkoutData.notes,
-        loyaltyPointsUsed: checkoutData.usePoints ? Math.min(user?.loyaltyPoints || 0, Math.floor(totalPrice / 2)) : 0,
-        transactionId: paymentResult.transactionId
+        loyaltyPointsUsed: checkoutData.usePoints ? Math.min(user?.loyaltyPoints || 0, Math.floor(totalPrice / 2)) : 0
       })
 
       if (order) {
@@ -124,8 +182,119 @@ export default function CartPage() {
 
   const availablePoints = user?.loyaltyPoints || 0
   const maxPointsUsable = Math.floor(totalPrice / 2)
-  const pointsToUse = checkoutData.usePoints ? Math.min(availablePoints, maxPointsUsable) : 0
-  const finalPrice = totalPrice - pointsToUse
+  const legacyPointsToUse = checkoutData.usePoints ? Math.min(availablePoints, maxPointsUsable) : 0
+  
+  // حساب الخصم المطبق
+  const discountAmount = checkoutData.appliedDiscount ? checkoutData.appliedDiscount.discountDetails.value : 0
+  
+  // حساب السعر النهائي (يتضمن خصم النقاط من API)
+  const pointsDiscountAmount = cartData?.stats?.totalDiscounts || 0
+  const finalPrice = (cartData?.stats?.finalTotal || totalPrice) - legacyPointsToUse - discountAmount
+
+  const applyDiscount = (discount: any) => {
+    setCheckoutData({
+      ...checkoutData,
+      appliedDiscount: discount
+    })
+  }
+
+  const removeDiscount = () => {
+    setCheckoutData({
+      ...checkoutData,
+      appliedDiscount: null
+    })
+  }
+
+  const applyReward = async (rewardId: string, action: 'apply' | 'remove') => {
+    if (!isAuthenticated || !user) {
+      alert('الرجاء تسجيل الدخول أولاً')
+      return
+    }
+
+    try {
+      setIsApplyingReward(true)
+      const token = localStorage.getItem('user_token')
+      const userData = JSON.parse(localStorage.getItem('user_data') || '{}')
+
+      const response = await fetch('/api/cart/rewards', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'user-id': userData.id,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          rewardId: rewardId,
+          action: action
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log(`✅ تم ${action === 'apply' ? 'تطبيق' : 'إزالة'} المكافأة:`, data)
+        
+        // تحديث بيانات سلة التسوق
+        setCartData(data)
+        
+        // رسالة نجاح
+        alert(data.message)
+      } else {
+        const errorData = await response.json()
+        alert(`فشل في ${action === 'apply' ? 'تطبيق' : 'إزالة'} المكافأة: ${errorData.error}`)
+      }
+    } catch (error) {
+      console.error('Error applying reward:', error)
+      alert(`حدث خطأ في ${action === 'apply' ? 'تطبيق' : 'إزالة'} المكافأة`)
+    } finally {
+      setIsApplyingReward(false)
+    }
+  }
+
+  const removePointsDiscount = async () => {
+    if (!isAuthenticated || !user) {
+      return
+    }
+
+    try {
+      setIsApplyingDiscount(true)
+      const token = localStorage.getItem('user_token')
+      const userData = JSON.parse(localStorage.getItem('user_data') || '{}')
+
+      const response = await fetch('/api/cart/apply-discount', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: userData.id
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('✅ تم إلغاء خصم النقاط:', data)
+        
+        // تحديث بيانات سلة التسوق
+        setCartData(data.cart)
+        
+        // تحديث نقاط المستخدم
+        if (user) {
+          user.loyaltyPoints = data.userPoints.remaining
+        }
+        
+        alert('تم إلغاء خصم النقاط وإرجاع النقاط إلى حسابك')
+      } else {
+        const errorData = await response.json()
+        alert(`فشل في إلغاء الخصم: ${errorData.error}`)
+      }
+    } catch (error) {
+      console.error('Error removing points discount:', error)
+      alert('حدث خطأ في إلغاء الخصم')
+    } finally {
+      setIsApplyingDiscount(false)
+    }
+  }
 
   // Check if user is authenticated
   if (!isAuthenticated) {
@@ -290,7 +459,7 @@ export default function CartPage() {
               {t('cart.continueShopping')}
             </Link>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              {t('cart.title')} ({totalItems})
+              {t('cart.title')} ({cartData?.stats?.totalItems || totalItems})
             </h1>
           </div>
           <button
@@ -310,7 +479,7 @@ export default function CartPage() {
               </h2>
               
               <div className="space-y-4">
-                {items.map((item) => (
+                {(cartData?.items || items).map((item) => (
                   <motion.div
                     key={`${item.id}-${JSON.stringify(item.customizations)}`}
                     initial={{ opacity: 0, y: 20 }}
@@ -387,22 +556,25 @@ export default function CartPage() {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between font-arabic">
                   <span>{t('cart.yourItems')}:</span>
-                  <span className="font-bold">{totalItems}</span>
+                  <span className="font-bold">{cartData?.stats?.totalItems || totalItems}</span>
                 </div>
                 <div className="flex justify-between font-arabic">
                   <span>{t('cart.subtotal')}:</span>
-                  <span className="font-bold">{totalPrice.toFixed(2)} {t('cart.currency')}</span>
+                  <span className="font-bold">{(cartData?.stats?.subtotal || totalPrice).toFixed(2)} {t('cart.currency')}</span>
                 </div>
-                {checkoutData.usePoints && pointsToUse > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>نقاط المكافآت:</span>
-                    <span className="font-bold">-{pointsToUse} نقطة</span>
+                
+                {/* عرض المكافآت المطبقة */}
+                {cartData?.rewards?.applied?.map((reward: any, index: number) => (
+                  <div key={index} className="flex justify-between text-green-600">
+                    <span>مكافأة: {reward.reward_type === 'discount' ? 'خصم' : 'منتج مجاني'}</span>
+                    <span className="font-bold">-{reward.reward_value} ريال</span>
                   </div>
-                )}
+                ))}
+                
                 <div className="border-t pt-4">
                   <div className="flex justify-between text-lg font-bold font-arabic">
                     <span>{t('cart.total')}:</span>
-                    <span>{finalPrice.toFixed(2)} {t('cart.currency')}</span>
+                    <span>{(cartData?.stats?.finalTotal || finalPrice).toFixed(2)} {t('cart.currency')}</span>
                   </div>
                 </div>
               </div>
@@ -421,19 +593,15 @@ export default function CartPage() {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-arabic">
                       {t('cart.paymentMethod')}
                     </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-4">
                       {availablePaymentMethods.map((method) => {
-                        let Icon = BanknotesIcon
-                        if (method.type === 'card') Icon = CreditCardIcon
-                        if (method.type === 'wallet' || method.type === 'digital_wallet') Icon = CreditCardIcon
-                        
                         return (
                           <label 
                             key={method.id} 
-                            className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
+                            className={`relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 ${
                               checkoutData.paymentMethod === method.id
-                                ? 'border-sakura-50 bg-sakura-50/10'
-                                : 'border-gray-200 dark:border-gray-600 hover:border-sakura-50/50'
+                                ? 'border-red-500 bg-red-50 dark:bg-red-900/20 shadow-lg'
+                                : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-sakura-400 hover:shadow-md'
                             }`}
                           >
                             <input
@@ -442,15 +610,36 @@ export default function CartPage() {
                               value={method.id}
                               checked={checkoutData.paymentMethod === method.id}
                               onChange={(e) => setCheckoutData({...checkoutData, paymentMethod: e.target.value})}
-                              className="text-sakura-50"
+                              className="absolute top-3 right-3 w-4 h-4 text-red-500 focus:ring-red-500"
                             />
-                            <div className="flex items-center gap-2">
-                              <span className="text-2xl">{method.icon}</span>
-                              <div>
-                                <div className="font-medium text-gray-900 dark:text-white">
+                            
+                            <div className="flex flex-col items-center gap-3 w-full">
+                              {method.image ? (
+                                <img 
+                                  src={method.image} 
+                                  alt={method.name}
+                                  className="w-16 h-12 object-contain rounded-lg"
+                                  onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = `data:image/svg+xml;base64,${btoa(`
+                                      <svg width="64" height="48" viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="64" height="48" rx="8" fill="#f3f4f6"/>
+                                        <text x="32" y="30" font-family="Arial" font-size="16" font-weight="bold" fill="#374151" text-anchor="middle">${method.icon}</text>
+                                      </svg>
+                                    `)}`;
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-16 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg">
+                                  <span className="text-2xl">{method.icon}</span>
+                                </div>
+                              )}
+                              
+                              <div className="text-center">
+                                <div className="font-semibold text-gray-900 dark:text-white text-sm">
                                   {method.name}
                                 </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                   {method.description}
                                 </div>
                               </div>
@@ -527,34 +716,73 @@ export default function CartPage() {
                     </div>
                   )}
 
-                  {/* Notes */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-arabic">
-                      {t('cart.notes')}
-                    </label>
-                    <textarea
-                      value={checkoutData.notes}
-                      onChange={(e) => setCheckoutData({...checkoutData, notes: e.target.value})}
-                      placeholder={t('cart.notesPlaceholder')}
-                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      rows={2}
-                    />
-                  </div>
 
-                  {/* Loyalty Points */}
-                  {isAuthenticated && availablePoints > 0 && (
-                    <div>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={checkoutData.usePoints}
-                          onChange={(e) => setCheckoutData({...checkoutData, usePoints: e.target.checked})}
-                          className="text-sakura-50"
-                        />
-                        <span>استخدام نقاط المكافآت ({availablePoints} نقطة متاحة)</span>
-                      </label>
+                  {/* نظام المكافآت */}
+                  {isAuthenticated && cartData?.rewards?.available && (
+                    <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 font-arabic">
+                          المكافآت المتاحة ({cartData.rewards.available.length})
+                        </h3>
+                        <div className="text-xs text-sakura-600 font-arabic">
+                          نقاطك: {cartData.userPoints}
+                          {cartData.pointsExpiryDate && (
+                            <div className="text-xs text-gray-500 mt-1">
+                              تنتهي: {convertToHijri(new Date(cartData.pointsExpiryDate))} هـ
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        {cartData.rewards.available.map((reward: any) => {
+                          const isApplied = cartData.rewards.applied.some((applied: any) => applied.reward_id === reward.id);
+                          
+                          return (
+                            <div
+                              key={reward.id}
+                              className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+                                isApplied
+                                  ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                                  : 'border-gray-200 dark:border-gray-600 hover:border-sakura-400'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                  <div className="font-medium text-gray-900 dark:text-white font-arabic">
+                                    {reward.arabic_name}
+                                  </div>
+                                  <div className="text-sm text-gray-600 dark:text-gray-400 font-arabic">
+                                    {reward.arabic_description}
+                                  </div>
+                                  <div className="text-xs text-gray-500 font-arabic">
+                                    {reward.points_required} نقطة
+                                  </div>
+                                </div>
+                                <div className="text-right ml-3">
+                                  <div className="font-bold text-sakura-600 dark:text-sakura-400">
+                                    {reward.type === 'discount' ? `-${reward.value} ريال` : 'مجاني'}
+                                  </div>
+                                  <button
+                                    onClick={() => applyReward(reward.id, isApplied ? 'remove' : 'apply')}
+                                    disabled={isApplyingReward}
+                                    className={`mt-2 px-3 py-1 rounded text-xs font-arabic transition-colors ${
+                                      isApplied
+                                        ? 'bg-red-500 text-white hover:bg-red-600'
+                                        : 'bg-sakura-50 text-sakura-600 hover:bg-sakura-100'
+                                    } disabled:opacity-50`}
+                                  >
+                                    {isApplied ? 'إزالة' : 'تطبيق'}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   )}
+
 
                   <div className="flex gap-2">
                     <button

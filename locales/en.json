@@ -124,5 +124,117 @@
     "lightMode": "Light Mode",
     "autoSave": "Auto Save",
     "soundEnabled": "Sound Enabled"
+  },
+  "nav": {
+    "home": "Home",
+    "menu": "Menu",
+    "about": "About Us",
+    "branches": "Branches",
+    "contact": "Contact",
+    "admin": "Admin",
+    "pos": "POS"
+  },
+  "brand": {
+    "name": "Sakura Cafe",
+    "tagline": "Exceptional Coffee Experience"
+  },
+  "welcome": "Discover the finest coffee flavors and Eastern & Western cuisine in a calm and comfortable atmosphere",
+  "about_us": "About Us",
+  "language": {
+    "toggle": "Change Language"
+  },
+  "theme": {
+    "toggle": "Change Theme",
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "navbar": {
+    "welcome": "Welcome",
+    "user": "User",
+    "premiumMember": "Premium Member",
+    "rewardPoints": "Reward Points",
+    "profile": "Profile",
+    "myOrders": "My Orders",
+    "rewardsProgram": "Rewards Program",
+    "logout": "Logout",
+    "welcomeToSakura": "Welcome to Sakura",
+    "loginBenefits": "Login to enjoy exclusive benefits",
+    "login": "Login",
+    "createAccount": "Create Account",
+    "switchToEnglish": "Switch to English",
+    "switchToArabic": "Switch to Arabic",
+    "switchToLight": "Switch to Light Mode",
+    "switchToDark": "Switch to Dark Mode",
+    "lightMode": "Light",
+    "darkMode": "Dark",
+    "shoppingCart": "Shopping Cart",
+    "search": "Search",
+    "account": "Account",
+    "cart": "Cart",
+    "register": "Register",
+    "searchPlaceholder": "Search for a product...",
+    "searchingFor": "Searching for"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "emptyTitle": "Your cart is empty",
+    "emptyDescription": "You haven't added any products yet",
+    "continueShopping": "Continue Shopping",
+    "checkoutTitle": "Order Summary",
+    "yourItems": "Your Items",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "currency": "SAR",
+    "continueOrder": "Continue Order",
+    "paymentMethod": "Payment Method",
+    "orderType": "Order Type",
+    "pickup": "Pickup",
+    "delivery": "Delivery",
+    "branch": "Branch",
+    "customerPhone": "Phone Number",
+    "phonePlaceholder": "Enter your phone number",
+    "phoneRequired": "Required for STC Pay",
+    "loginRequired": "Login Required",
+    "loginRequiredMessage": "Please login to access your shopping cart"
+  },
+  "payment": {
+    "cash": "Cash",
+    "mada": "Mada",
+    "visa": "Visa",
+    "mastercard": "Mastercard",
+    "stcPay": "STC Pay",
+    "samsungWallet": "Samsung Wallet",
+    "applePay": "Apple Pay",
+    "googlePay": "Google Pay",
+    "failed": "Payment Failed"
+  },
+  "order": {
+    "success": "Order created successfully",
+    "error": "Error creating order"
+  },
+  "branches": {
+    "title": "Our Branches",
+    "sadiyan": "Sadiyan Branch",
+    "alnuqrah": "Al-Nuqrah Branch",
+    "aljameen": "Al-Jameen Branch",
+    "almadina": "Al-Madina Road Branch",
+    "alrajihi": "Al-Rajihi Street Branch",
+    "fajr": "Fajr Branch",
+    "address": "Address",
+    "phone": "Phone",
+    "hours": "Working Hours",
+    "map": "Map"
+  },
+  "loyalty": {
+    "points": "Loyalty Points",
+    "earned": "Points Earned",
+    "used": "Points Used",
+    "balance": "Balance",
+    "expiry": "Expiry Date",
+    "rewards": "Rewards",
+    "available": "Available",
+    "applied": "Applied",
+    "discount": "Discount",
+    "freeItem": "Free Item"
   }
 }

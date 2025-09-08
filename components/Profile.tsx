@@ -15,9 +15,9 @@ const Profile = () => {
   }
 
   const recentOrders = [
-    { id: 1, item: 'قهوة تركية', date: '2024-01-15', status: 'مكتمل', points: 15 },
-    { id: 2, item: 'برجر لحم', date: '2024-01-14', status: 'مكتمل', points: 35 },
-    { id: 3, item: 'لاتيه فانيلا', date: '2024-01-13', status: 'مكتمل', points: 18 }
+    { id: 1, item: 'قهوة تركية', date: '2025-01-15', status: 'مكتمل', points: 15 },
+    { id: 2, item: 'برجر لحم', date: '2025-01-14', status: 'مكتمل', points: 35 },
+    { id: 3, item: 'لاتيه فانيلا', date: '2025-01-13', status: 'مكتمل', points: 18 }
   ]
 
   return (

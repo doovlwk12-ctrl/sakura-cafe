@@ -16,7 +16,7 @@ const translations = {
     
     // Theme
     "theme.toggle": "تبديل الوضع",
-    "theme.light": "فاتح",
+    "themeادل ل .light": "فاتح",
     "theme.dark": "داكن",
     
     // Language

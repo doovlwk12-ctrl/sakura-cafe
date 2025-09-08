@@ -29,14 +29,10 @@ const LoginPage: React.FC = () => {
     setError('')
 
     try {
-      const success = await login(formData.email, formData.password)
-      if (success) {
-        router.push('/')
-      } else {
-        setError(t('auth.invalidCredentials'))
-      }
-    } catch (error) {
-      setError(t('auth.loginError'))
+      await login(formData.email, formData.password, 'customer')
+      router.push('/')
+    } catch (error: any) {
+      setError(error.message || t('auth.loginError'))
     } finally {
       setIsLoading(false)
     }
@@ -50,7 +46,7 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-sakura-50/20 via-white to-deep-50/20 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Back Button */}
       <div className="fixed top-4 left-4 z-50">
         <Link
@@ -137,22 +133,26 @@ const LoginPage: React.FC = () => {
           className="mt-8 space-y-6"
           onSubmit={handleSubmit}
         >
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+          <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
             {error && (
-              <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 border border-red-400 text-red-700 dark:text-red-300 rounded-lg font-arabic">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 rounded-xl font-arabic"
+              >
                 {error}
-              </div>
+              </motion.div>
             )}
 
             <div className="space-y-6">
               {/* Email Field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-arabic">
+                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 font-arabic">
                   {t('auth.email')}
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <UserIcon className="h-5 w-5 text-gray-400" />
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <UserIcon className="h-5 w-5 text-gray-400 group-focus-within:text-sakura-50 transition-colors" />
                   </div>
                   <input
                     id="email"
@@ -162,7 +162,7 @@ const LoginPage: React.FC = () => {
                     required
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sakura-50 focus:border-transparent font-arabic"
+                    className="block w-full pl-12 pr-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sakura-50 focus:border-sakura-50 transition-all duration-200 font-arabic text-lg"
                     placeholder={t('auth.emailPlaceholder')}
                   />
                 </div>
@@ -170,12 +170,12 @@ const LoginPage: React.FC = () => {
 
               {/* Password Field */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-arabic">
+                <label htmlFor="password" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 font-arabic">
                   {t('auth.password')}
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <LockClosedIcon className="h-5 w-5 text-gray-400" />
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <LockClosedIcon className="h-5 w-5 text-gray-400 group-focus-within:text-sakura-50 transition-colors" />
                   </div>
                   <input
                     id="password"
@@ -185,18 +185,18 @@ const LoginPage: React.FC = () => {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sakura-50 focus:border-transparent font-arabic"
+                    className="block w-full pl-12 pr-14 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sakura-50 focus:border-sakura-50 transition-all duration-200 font-arabic text-lg"
                     placeholder={t('auth.passwordPlaceholder')}
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center hover:bg-gray-50 dark:hover:bg-gray-600 rounded-r-xl transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeSlashIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                      <EyeSlashIcon className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
                     ) : (
-                      <EyeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                      <EyeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
                     )}
                   </button>
                 </div>
@@ -230,11 +230,11 @@ const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sakura-50 hover:bg-sakura-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sakura-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-arabic"
+                className="w-full flex justify-center py-4 px-6 border border-transparent rounded-xl shadow-lg text-lg font-semibold text-white bg-gradient-to-r from-sakura-50 to-sakura-100 hover:from-sakura-100 hover:to-sakura-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sakura-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-arabic transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 {isLoading ? (
                   <div className="flex items-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin -ml-1 mr-3 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>

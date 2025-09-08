@@ -15,6 +15,9 @@ const Contact = () => {
     message: ''
   })
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState('')
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
@@ -22,12 +25,40 @@ const Contact = () => {
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // هنا يمكن إضافة منطق إرسال النموذج
-    console.log('Form submitted:', formData)
-    alert('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.')
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+    setIsSubmitting(true)
+    setSubmitMessage('')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        setSubmitMessage(result.message)
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+        
+        // إظهار تفاصيل الإرسال في الكونسول
+        console.log('📧 تفاصيل الرسالة المرسلة:', result)
+        
+        // إخفاء الرسالة بعد 5 ثوان
+        setTimeout(() => setSubmitMessage(''), 5000)
+      } else {
+        const errorData = await response.json()
+        setSubmitMessage(errorData.message || 'حدث خطأ في إرسال رسالتك')
+      }
+    } catch (error) {
+      console.error('خطأ في إرسال الرسالة:', error)
+      setSubmitMessage('حدث خطأ في إرسال رسالتك. يرجى المحاولة مرة أخرى.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
 
@@ -61,6 +92,17 @@ const Contact = () => {
             className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl"
           >
             <h3 className="text-2xl font-bold text-coffee-800 mb-6">{t('contact.sendMessage')}</h3>
+            
+            {/* رسالة النجاح/الخطأ */}
+            {submitMessage && (
+              <div className={`mb-6 p-4 rounded-lg ${
+                submitMessage.includes('نجاح') 
+                  ? 'bg-green-100 text-green-800 border border-green-200' 
+                  : 'bg-red-100 text-red-800 border border-red-200'
+              }`}>
+                <p className="font-medium">{submitMessage}</p>
+              </div>
+            )}
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
@@ -149,9 +191,19 @@ const Contact = () => {
 
               <button
                 type="submit"
-                className="w-full btn-primary text-lg py-4"
+                disabled={isSubmitting}
+                className={`w-full btn-primary text-lg py-4 ${
+                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
-                {t('contact.sendButton')}
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    جاري الإرسال...
+                  </div>
+                ) : (
+                  t('contact.sendButton')
+                )}
               </button>
             </form>
           </motion.div>

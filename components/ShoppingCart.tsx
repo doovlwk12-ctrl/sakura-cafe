@@ -66,6 +66,41 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose }) => {
     usePoints: false
   });
 
+  const [availableRewards, setAvailableRewards] = useState<any[]>([]);
+  const [appliedRewards, setAppliedRewards] = useState<any[]>([]);
+
+  // جلب المكافآت المتاحة عند فتح السلة
+  useEffect(() => {
+    const loadRewards = async () => {
+      if (!isAuthenticated || !isOpen) return;
+      
+      try {
+        const token = localStorage.getItem('user_token');
+        const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+        
+        if (token && userData.id) {
+          const response = await fetch('/api/cart/items', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'user-id': userData.id
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setAvailableRewards(data.rewards?.available || []);
+            setAppliedRewards(data.rewards?.applied || []);
+            console.log('✅ تم جلب المكافآت:', data.rewards);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading rewards:', error);
+      }
+    };
+
+    loadRewards();
+  }, [isAuthenticated, isOpen]);
+
   const branches = [
     { id: 'branch-001', name: 'فرع صديان', address: 'صديان، حائل' },
     { id: 'branch-002', name: 'فرع النقرة', address: 'النقرة، حائل' },
@@ -123,6 +158,106 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose }) => {
   const maxPointsUsable = Math.floor(totalPrice / 2); // يمكن استخدام نقاط تصل إلى 50% من قيمة الطلب
   const pointsToUse = checkoutData.usePoints ? Math.min(availablePoints, maxPointsUsable) : 0;
   const finalPrice = totalPrice - pointsToUse;
+
+  // تطبيق مكافأة
+  const applyReward = async (rewardId: string) => {
+    try {
+      const token = localStorage.getItem('user_token');
+      const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+      
+      if (!token || !userData.id) {
+        alert('الرجاء تسجيل الدخول أولاً');
+        return;
+      }
+
+      const response = await fetch('/api/cart/rewards', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'user-id': userData.id,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          rewardId,
+          action: 'apply'
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ تم تطبيق المكافأة:', data);
+        
+        // تحديث المكافآت المتاحة والمطبقة
+        setAvailableRewards(data.availableRewards || []);
+        setAppliedRewards(data.cart.rewards || []);
+        
+        // تحديث نقاط المستخدم
+        const updatedUserData = {
+          ...userData,
+          loyaltyPoints: data.userPoints || 0
+        };
+        localStorage.setItem('user_data', JSON.stringify(updatedUserData));
+        
+        alert('تم تطبيق المكافأة بنجاح!');
+      } else {
+        const errorData = await response.json();
+        alert(`فشل في تطبيق المكافأة: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error applying reward:', error);
+      alert('حدث خطأ في تطبيق المكافأة');
+    }
+  };
+
+  // إزالة مكافأة
+  const removeReward = async (rewardId: string) => {
+    try {
+      const token = localStorage.getItem('user_token');
+      const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+      
+      if (!token || !userData.id) {
+        alert('الرجاء تسجيل الدخول أولاً');
+        return;
+      }
+
+      const response = await fetch('/api/cart/rewards', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'user-id': userData.id,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          rewardId,
+          action: 'remove'
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ تم إزالة المكافأة:', data);
+        
+        // تحديث المكافآت المتاحة والمطبقة
+        setAvailableRewards(data.availableRewards || []);
+        setAppliedRewards(data.cart.rewards || []);
+        
+        // تحديث نقاط المستخدم
+        const updatedUserData = {
+          ...userData,
+          loyaltyPoints: data.userPoints || 0
+        };
+        localStorage.setItem('user_data', JSON.stringify(updatedUserData));
+        
+        alert('تم إزالة المكافأة بنجاح!');
+      } else {
+        const errorData = await response.json();
+        alert(`فشل في إزالة المكافأة: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error removing reward:', error);
+      alert('حدث خطأ في إزالة المكافأة');
+    }
+  };
 
   // Don't render if not open
   if (!isOpen) {
@@ -230,12 +365,12 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose }) => {
                       >
                         <img
                           src={item.image}
-                          alt={item.arabicName}
+                          alt={item.arabicName || item.name || 'منتج'}
                           className="w-16 h-16 rounded-xl object-cover shadow-md border-2 border-white dark:border-gray-500"
                         />
                         <div className="flex-1 min-w-0">
                           <h4 className="font-semibold text-gray-900 dark:text-white font-arabic text-sm mb-1 truncate">
-                            {item.arabicName}
+                            {item.arabicName || item.name || 'منتج'}
                           </h4>
                           <p className="text-sm font-bold text-sakura-50 mb-1">
                             {item.price} ر.س
@@ -295,6 +430,64 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose }) => {
                   {user && user.loyaltyPoints && user.loyaltyPoints > 0 && (
                     <div className="text-sm text-gray-600 dark:text-gray-400 font-arabic">
                       نقاط المكافآت المتاحة: {availablePoints} نقطة
+                    </div>
+                  )}
+
+                  {/* Available Rewards */}
+                  {availableRewards.length > 0 && (
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-3 rounded-lg border border-purple-200 dark:border-purple-800">
+                      <h4 className="text-sm font-semibold text-purple-700 dark:text-purple-300 font-arabic mb-2">
+                        🎁 المكافآت المتاحة ({availableRewards.length})
+                      </h4>
+                      <div className="space-y-2">
+                        {availableRewards.slice(0, 3).map((reward) => (
+                          <div key={reward.id} className="flex items-center justify-between bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm">
+                            <div>
+                              <p className="text-xs font-semibold text-gray-900 dark:text-white font-arabic">
+                                {reward.arabic_name}
+                              </p>
+                              <p className="text-xs text-gray-600 dark:text-gray-400">
+                                {reward.points_required} نقطة
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => applyReward(reward.id)}
+                              className="text-xs bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 px-2 py-1 rounded-full hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
+                            >
+                              تطبيق
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Applied Rewards */}
+                  {appliedRewards.length > 0 && (
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
+                      <h4 className="text-sm font-semibold text-green-700 dark:text-green-300 font-arabic mb-2">
+                        ✅ المكافآت المطبقة ({appliedRewards.length})
+                      </h4>
+                      <div className="space-y-2">
+                        {appliedRewards.map((reward) => (
+                          <div key={reward.id} className="flex items-center justify-between bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm">
+                            <div>
+                              <p className="text-xs font-semibold text-gray-900 dark:text-white font-arabic">
+                                {reward.reward_name}
+                              </p>
+                              <p className="text-xs text-green-600 dark:text-green-400">
+                                -{reward.discount_amount} ر.س
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => removeReward(reward.reward_id)}
+                              className="text-xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 px-2 py-1 rounded-full hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
+                            >
+                              إزالة
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 

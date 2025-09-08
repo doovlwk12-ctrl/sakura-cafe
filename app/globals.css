@@ -276,4 +276,92 @@ body {
     margin-left: auto;
     margin-right: 0;
   }
+
+  /* Enhanced Design System Components */
+  .glass-card {
+    @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-white/20 dark:border-gray-700/50;
+  }
+  
+  .gradient-card {
+    @apply bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900;
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl;
+  }
+  
+  .smooth-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-sakura-50 to-deep-50 bg-clip-text text-transparent;
+  }
+  
+  .text-gradient-secondary {
+    @apply bg-gradient-to-r from-accent-50 to-sakura-50 bg-clip-text text-transparent;
+  }
+  
+  .button-primary {
+    @apply bg-gradient-to-r from-sakura-50 to-sakura-100 hover:from-sakura-100 hover:to-sakura-200 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105;
+  }
+  
+  .button-secondary {
+    @apply bg-gradient-to-r from-deep-50 to-accent-50 hover:from-accent-50 hover:to-deep-50 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105;
+  }
+  
+  .button-outline {
+    @apply border-2 border-sakura-50 text-sakura-50 hover:bg-sakura-50 hover:text-white font-bold py-3 px-6 rounded-xl transition-all duration-300;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sakura-50 focus:border-transparent transition-all duration-300;
+  }
+  
+  .card-hover {
+    @apply hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-500;
+  }
+  
+  .loading-shimmer {
+    @apply relative overflow-hidden;
+  }
+  
+  .loading-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+  }
+  
+  /* Dark mode specific enhancements */
+  .dark .glass-card {
+    @apply bg-gray-800/80 backdrop-blur-md border-gray-700/50;
+  }
+  
+  .dark .text-gradient-primary {
+    @apply bg-gradient-to-r from-sakura-100 to-deep-100 bg-clip-text text-transparent;
+  }
+  
+  /* Responsive enhancements */
+  @media (max-width: 768px) {
+    .mobile-optimized {
+      @apply text-sm px-3 py-2;
+    }
+  }
+  
+  /* Accessibility improvements */
+  .focus-visible {
+    @apply focus:outline-none focus:ring-2 focus:ring-sakura-50 focus:ring-offset-2;
+  }
+  
+  /* Print styles */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
 }

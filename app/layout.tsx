@@ -77,7 +77,6 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className="dark">
       <head>
-        <script src="/fix-alert.js" async></script>
       </head>
       <body className={`${tajawal.variable} ${inter.variable} font-arabic`}>
         <Providers>

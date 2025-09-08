@@ -4,7 +4,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: any | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -34,15 +34,20 @@ export const useAuthProvider = () => {
     setIsLoading(false);
   }, []);
 
-  const login = async (username: string, password: string) => {
-    // محاكاة عملية تسجيل الدخول
-    if (username === 'admin' && password === 'admin123') {
-      const token = 'mock_jwt_token_' + Date.now();
-      localStorage.setItem('admin_token', token);
-      setIsAuthenticated(true);
-      setUser({ username });
-    } else {
-      throw new Error('Invalid credentials');
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      // محاكاة عملية تسجيل الدخول
+      if (email === 'admin@sakura.com' && password === 'admin123') {
+        const token = 'mock_jwt_token_' + Date.now();
+        localStorage.setItem('admin_token', token);
+        setIsAuthenticated(true);
+        setUser({ email, username: 'admin' });
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
     }
   };
 

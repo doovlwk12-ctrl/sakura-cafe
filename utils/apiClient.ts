@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 // إنشاء instance من axios مع الإعدادات الأساسية
 const apiClient: AxiosInstance = axios.create({
@@ -12,7 +12,7 @@ const apiClient: AxiosInstance = axios.create({
 
 // Request interceptor لإضافة التوكن
 apiClient.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     // إضافة التوكن من localStorage
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('user_token');
@@ -176,6 +176,198 @@ export const branchesAPI = {
   create: (branch: any) => api.post('/branches', branch),
   update: (id: string, branch: any) => api.put(`/branches/${id}`, branch),
   delete: (id: string) => api.delete(`/branches/${id}`),
+};
+
+export const cartAPI = {
+  getItems: (userId: string) => api.get('/cart/items', {
+    headers: { 'user-id': userId }
+  }),
+  addItem: (userId: string, item: any) => api.post('/cart/items', item, {
+    headers: { 'user-id': userId }
+  }),
+  updateItem: (userId: string, itemId: string, quantity: number) => 
+    api.put(`/cart/items/${itemId}`, { quantity }, {
+      headers: { 'user-id': userId }
+    }),
+  removeItem: (userId: string, itemId: string) => 
+    api.delete(`/cart/items/${itemId}`, {
+      headers: { 'user-id': userId }
+    }),
+  clearCart: (userId: string) => api.delete('/cart/items', {
+    headers: { 'user-id': userId }
+  }),
+  applyReward: (userId: string, rewardId: string) => 
+    api.post('/cart/rewards', { rewardId }, {
+      headers: { 'user-id': userId }
+    }),
+  removeReward: (userId: string, rewardId: string) => 
+    api.delete(`/cart/rewards/${rewardId}`, {
+      headers: { 'user-id': userId }
+    }),
+};
+
+export const dashboardAPI = {
+  getStats: () => api.get('/dashboard/stats'),
+  getRecentOrders: (limit?: number) => 
+    api.get(`/dashboard/recent-orders${limit ? `?limit=${limit}` : ''}`),
+  getSalesReport: (startDate: string, endDate: string, branchId?: string) => {
+    const params = new URLSearchParams({ startDate, endDate });
+    if (branchId) params.append('branchId', branchId);
+    return api.get(`/dashboard/sales-report?${params}`);
+  },
+};
+
+export const rewardsAPI = {
+  getAvailable: (userId: string) => api.get(`/rewards/available`, {
+    headers: { 'user-id': userId }
+  }),
+  getHistory: (userId: string) => api.get(`/rewards/history`, {
+    headers: { 'user-id': userId }
+  }),
+  apply: (userId: string, rewardId: string) => 
+    api.post('/rewards/apply', { rewardId }, {
+      headers: { 'user-id': userId }
+    }),
+};
+
+export const adminAPI = {
+  authenticate: (credentials: { username: string; password: string; twoFactorCode?: string }) =>
+    api.post('/admin/auth', credentials),
+  getDashboard: () => api.get('/admin/dashboard'),
+  getUsers: () => api.get('/admin/users'),
+  updateUser: (id: string, userData: any) => api.put(`/admin/users/${id}`, userData),
+  deleteUser: (id: string) => api.delete(`/admin/users/${id}`),
+  getReports: (type: string, params?: any) => 
+    api.get(`/admin/reports/${type}`, { params }),
+};
+
+export const cashierAPI = {
+  authenticate: (credentials: { username: string; password: string; branchId: string }) =>
+    api.post('/cashier/auth', credentials),
+  getOrders: (branchId: string, status?: string) => 
+    api.get(`/cashier/orders?branch_id=${branchId}${status ? `&status=${status}` : ''}`),
+  updateOrderStatus: (orderId: string, status: string) =>
+    api.put(`/cashier/orders/${orderId}`, { status }),
+  printInvoice: (orderId: string) =>
+    api.post(`/cashier/orders/${orderId}/print`),
+};
+
+// دوال مساعدة للمزامنة
+export const syncAPI = {
+  // مزامنة البيانات المحلية مع الخادم
+  syncCart: async (userId: string, localCart: any[]) => {
+    try {
+      const serverCart = await cartAPI.getItems(userId);
+      // مقارنة وتحديث البيانات
+      return serverCart.data;
+    } catch (error) {
+      console.error('Error syncing cart:', error);
+      return localCart;
+    }
+  },
+
+  // مزامنة حالة الطلبات
+  syncOrders: async (branchId?: string) => {
+    try {
+      const response = await ordersAPI.getAll();
+      return response.data.orders;
+    } catch (error) {
+      console.error('Error syncing orders:', error);
+      return [];
+    }
+  },
+
+  // مزامنة المنتجات
+  syncProducts: async () => {
+    try {
+      const response = await productsAPI.getAll();
+      return response.data.products;
+    } catch (error) {
+      console.error('Error syncing products:', error);
+      return [];
+    }
+  },
+
+  // مزامنة الإحصائيات
+  syncStats: async () => {
+    try {
+      const response = await dashboardAPI.getStats();
+      return response.data.stats;
+    } catch (error) {
+      console.error('Error syncing stats:', error);
+      return null;
+    }
+  }
+};
+
+// نظام إعادة المحاولة للطلبات الفاشلة
+export const retryAPI = {
+  retry: async <T>(
+    apiCall: () => Promise<T>,
+    maxRetries: number = 3,
+    delay: number = 1000
+  ): Promise<T> => {
+    let lastError: any;
+    
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        return await apiCall();
+      } catch (error) {
+        lastError = error;
+        if (i < maxRetries - 1) {
+          console.log(`Retry attempt ${i + 1}/${maxRetries} after ${delay}ms`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2; // زيادة التأخير تدريجياً
+        }
+      }
+    }
+    
+    throw lastError;
+  }
+};
+
+// نظام التخزين المؤقت
+export const cacheAPI = {
+  set: (key: string, data: any, ttl: number = 300000) => { // 5 دقائق افتراضياً
+    if (typeof window !== 'undefined') {
+      const item = {
+        data,
+        timestamp: Date.now(),
+        ttl
+      };
+      localStorage.setItem(`cache_${key}`, JSON.stringify(item));
+    }
+  },
+
+  get: (key: string) => {
+    if (typeof window !== 'undefined') {
+      const item = localStorage.getItem(`cache_${key}`);
+      if (item) {
+        const parsed = JSON.parse(item);
+        if (Date.now() - parsed.timestamp < parsed.ttl) {
+          return parsed.data;
+        } else {
+          localStorage.removeItem(`cache_${key}`);
+        }
+      }
+    }
+    return null;
+  },
+
+  clear: (key?: string) => {
+    if (typeof window !== 'undefined') {
+      if (key) {
+        localStorage.removeItem(`cache_${key}`);
+      } else {
+        // مسح جميع عناصر التخزين المؤقت
+        Object.keys(localStorage).forEach(k => {
+          if (k.startsWith('cache_')) {
+            localStorage.removeItem(k);
+          }
+        });
+      }
+    }
+  }
 };
 
 export default apiClient;
