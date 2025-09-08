@@ -13,7 +13,7 @@ import {
   BookOpenIcon, 
   MapPinIcon, 
   PhoneIcon,
-  CogIcon,
+  Cog6ToothIcon,
   ShoppingCartIcon,
   Bars3Icon,
   XMarkIcon
@@ -47,7 +47,7 @@ const GlobalNavbar: React.FC = () => {
     { href: '/menu', label: t('nav.menu'), icon: BookOpenIcon },
     { href: '/branches', label: t('nav.branches'), icon: MapPinIcon },
     { href: '/contact', label: t('nav.contact'), icon: PhoneIcon },
-    { href: '/admin', label: t('nav.admin'), icon: CogIcon },
+    { href: '/admin', label: t('nav.admin'), icon: Cog6ToothIcon },
     { href: '/pos', label: t('nav.pos'), icon: ShoppingCartIcon }
   ]
 

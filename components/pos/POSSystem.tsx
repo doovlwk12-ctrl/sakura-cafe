@@ -22,7 +22,7 @@ interface POSSystemProps {
   branchId?: string;
 }
 
-const POSSystem: React.FC<POSSystemProps> = ({ cashierName = 'كاشير', branchId = 'branch-001' }) => {
+const POSSystem: React.FC<POSSystemProps> = ({ cashierName = 'Cashier', branchId = 'branch-001' }) => {
   const { t, isRTL } = useLanguage();
   const { isDark } = useTheme();
   const router = useRouter();
@@ -98,7 +98,7 @@ const POSSystem: React.FC<POSSystemProps> = ({ cashierName = 'كاشير', branc
     if (currentOrder.length === 0) return;
     
     // هنا يمكن إضافة منطق معالجة الدفع
-    const message = isRTL ? 'تم معالجة الدفع بنجاح!' : 'Payment processed successfully!';
+    const message = t('pos.paymentSuccess');
     alert(message);
     clearOrder();
   };
@@ -135,7 +135,7 @@ const POSSystem: React.FC<POSSystemProps> = ({ cashierName = 'كاشير', branc
               onClick={handleLogout}
               className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-arabic"
             >
-              تسجيل الخروج
+{t('pos.logout')}
             </button>
           </div>
         </div>

@@ -304,9 +304,8 @@ npm run deploy
 
 ## 📞 **التواصل**
 
-- **البريد الإلكتروني**: your-email@example.com
-- **تويتر**: [@your-twitter](https://twitter.com/your-twitter)
-- **لينكد إن**: [your-linkedin](https://linkedin.com/in/your-linkedin)
+- **البريد الإلكتروني**: abdulsalam.abdullah.cs@gmail.com
+- **لينكد إن**: [عبدالسلام الشمري](https://www.linkedin.com/in/%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85-%D8%A7%D9%84%D8%B4%D9%85%D8%B1%D9%8A-7b224b2b9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
 
 ---
 

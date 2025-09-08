@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useLanguage } from '../../hooks/LanguageProvider';
 
 const UserManagement = () => {
+  const { t, isRTL } = useLanguage();
   const [users, setUsers] = useState<any[]>([]);
   const [form, setForm] = useState({ username: "", email: "", password: "", role: "cashier" });
   const [editingUser, setEditingUser] = useState<any | null>(null);

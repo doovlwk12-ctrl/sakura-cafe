@@ -1,13 +1,12 @@
 {
   "name": "sakura-cafe-website",
   "version": "1.0.0",
-  "description": "موقع محسن لمقهى ساكورا",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "deploy": "npm run build && gh-pages -d .next"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -38,6 +37,7 @@
     "@types/react-dom": "^18.2.0",
     "eslint": "^8.51.0",
     "eslint-config-next": "^14.0.0",
+    "gh-pages": "^6.3.0",
     "typescript": "^5.2.0"
   },
   "keywords": [
@@ -48,5 +48,6 @@
     "react"
   ],
   "author": "Sakura Cafe Team",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://USERNAME.github.io/sakura-cafe"
 }

@@ -10,6 +10,7 @@ import InventoryManagement from './InventoryManagement';
 import RealTimeNotifications from '../RealTimeNotifications';
 import { useLanguage } from '../../hooks/LanguageProvider';
 import { useProducts } from '../../hooks/useProducts';
+import { productImages } from '../../data/productImages';
 
 const AdminDashboard: React.FC = () => {
   const { logout, user } = useAuth();
@@ -22,7 +23,7 @@ const AdminDashboard: React.FC = () => {
     { id: 'orders', label: t('admin.orders'), icon: '📋' },
     { id: 'users', label: t('admin.users'), icon: '👥' },
     { id: 'reports', label: t('admin.reports'), icon: '📈' },
-    { id: 'inventory', label: 'إدارة المخزون', icon: '📦' },
+    { id: 'inventory', label: t('admin.inventory'), icon: '📦' },
     { id: 'settings', label: t('admin.settings'), icon: '⚙️' }
   ];
 
@@ -385,21 +386,38 @@ const DashboardContent: React.FC = () => {
 
 const ProductsContent: React.FC = () => {
   const { t, isRTL } = useLanguage();
-  const { getProducts, loading, error } = useProducts();
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // جلب المنتجات من قاعدة البيانات
+  // جلب المنتجات من قاعدة البيانات أو استخدام المنتجات المحلية
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const response = await getProducts();
-        if (response && response.products) {
-          setProducts(response.products);
-        }
+        setError(null);
+        
+        // تحويل منتجات productImages إلى تنسيق مناسب للإدارة
+        const formattedProducts = productImages.map(product => ({
+          id: product.id,
+          name: product.englishName,
+          nameAr: product.arabicName,
+          description: `Delicious ${product.englishName}`,
+          descriptionAr: `${product.arabicName} لذيذ`,
+          category: product.category,
+          price: product.price,
+          calories: product.calories,
+          imagePath: product.imagePath,
+          status: 'active',
+          stock: Math.floor(Math.random() * 100) + 10, // مخزون عشوائي للعرض
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }));
+        
+        setProducts(formattedProducts);
       } catch (error) {
         console.error('خطأ في جلب المنتجات:', error);
+        setError('فشل في تحميل المنتجات');
       } finally {
         setIsLoading(false);
       }
@@ -412,10 +430,11 @@ const ProductsContent: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const categories = [
-    { id: 'all', name: 'الكل', nameAr: 'الكل' },
-    { id: 'drinks', name: 'المشروبات', nameAr: 'المشروبات' },
-    { id: 'sweet', name: 'الحلويات', nameAr: 'الحلويات' },
-    { id: 'sandwiches', name: 'الساندويتشات', nameAr: 'الساندويتشات' }
+    { id: 'all', name: 'All', nameAr: 'الكل' },
+    { id: 'drinks', name: 'Drinks', nameAr: 'المشروبات' },
+    { id: 'sweets', name: 'Sweets', nameAr: 'الحلويات' },
+    { id: 'sandwiches', name: 'Sandwiches', nameAr: 'الساندويتشات' },
+    { id: 'groups', name: 'Groups', nameAr: 'المجموعات' }
   ];
 
   const filteredProducts = selectedCategory === 'all' 
@@ -442,7 +461,7 @@ const ProductsContent: React.FC = () => {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#e57373] mx-auto mb-4"></div>
-            <p className="text-[#6b7280] dark:text-[#9ca3af] font-arabic">جاري تحميل المنتجات...</p>
+            <p className="text-[#6b7280] dark:text-[#9ca3af] font-arabic">{t('admin.products.loading')}</p>
           </div>
         </div>
       </div>
@@ -456,7 +475,7 @@ const ProductsContent: React.FC = () => {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="text-red-500 text-4xl mb-4">⚠️</div>
-            <p className="text-red-500 font-arabic">خطأ في تحميل المنتجات: {error}</p>
+            <p className="text-red-500 font-arabic">{t('admin.products.error')}: {error}</p>
           </div>
         </div>
       </div>
@@ -469,17 +488,17 @@ const ProductsContent: React.FC = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
           <h2 className="text-2xl md:text-3xl font-bold text-white font-arabic">
-            إدارة المنتجات
+            {t('admin.products.manage')}
           </h2>
           <p className="text-gray-300 font-arabic">
-            إضافة وتعديل وحذف المنتجات ({products.length} منتج)
+            {t('admin.products.addNew')} ({products.length} {t('admin.products.count')})
           </p>
         </div>
         <button 
           onClick={() => setShowAddModal(true)}
           className="button-primary w-full sm:w-auto"
         >
-          إضافة منتج جديد
+          {t('admin.products.addNew')}
         </button>
       </div>
 
@@ -508,9 +527,9 @@ const ProductsContent: React.FC = () => {
           <div key={product.id} className="glass-card p-4 hover-lift">
             <div className="relative">
               <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-                {product.image ? (
+                {product.imagePath ? (
                   <img 
-                    src={product.image} 
+                    src={product.imagePath} 
                     alt={getProductName(product)}
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -529,14 +548,14 @@ const ProductsContent: React.FC = () => {
                     ? 'bg-green-100 text-green-800' 
                     : 'bg-red-100 text-red-800'
                 }`}>
-                  {product.status === 'active' ? 'نشط' : 'غير نشط'}
+                  {product.status === 'active' ? t('admin.products.status.active') : t('admin.products.status.inactive')}
                 </span>
               </div>
 
               {/* Stock Badge */}
               <div className="absolute top-2 left-2">
                 <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-                  {product.stock} متوفر
+                  {product.stock} {t('admin.products.stock')}
                 </span>
               </div>
             </div>
@@ -556,13 +575,13 @@ const ProductsContent: React.FC = () => {
                   {getCategoryName(product.category)}
                 </span>
                 <span className="text-gray-500">
-                  {product.calories} سعرة
+                  {product.calories} {t('admin.products.calories')}
                 </span>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-xl font-bold text-sakura-50">
-                  {product.price} ريال
+                  {product.price} {t('admin.products.price')}
                 </span>
                 <div className="flex gap-2">
                   <button className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors">

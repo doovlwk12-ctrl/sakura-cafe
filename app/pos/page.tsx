@@ -32,7 +32,7 @@ export default function POSPage() {
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-[#e57373] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-[#6b7280] dark:text-[#9ca3af] font-arabic">
-            جاري التحميل...
+            {t('pos.loading')}
           </p>
         </div>
       </div>
@@ -49,27 +49,27 @@ export default function POSPage() {
           </div>
           
           <h1 className="text-2xl font-bold text-[#1f2937] dark:text-[#f9fafb] font-arabic mb-4">
-            نقطة البيع
+            {t('pos.title')}
           </h1>
           
           <p className="text-[#6b7280] dark:text-[#9ca3af] font-arabic mb-6">
-            يرجى تسجيل الدخول للوصول إلى واجهة الكاشير
+            {t('pos.loginRequired')}
           </p>
           
           <button
             onClick={() => router.push('/cashier-login')}
             className="w-full px-6 py-3 bg-[#e57373] text-white rounded-lg font-medium hover:bg-[#d65a5a] transition-all duration-300 font-arabic"
           >
-            تسجيل دخول الكاشير
+            {t('pos.cashierLogin')}
           </button>
           
           <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
             <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200 font-arabic mb-2">
-              بيانات تجريبية:
+              {t('pos.demoData')}
             </h3>
             <div className="text-xs text-blue-700 dark:text-blue-300 font-arabic space-y-1">
-              <p>اسم المستخدم: cashier</p>
-              <p>كلمة المرور: 123456</p>
+              <p>{t('pos.username')}: cashier</p>
+              <p>{t('pos.password')}: 123456</p>
             </div>
           </div>
         </div>

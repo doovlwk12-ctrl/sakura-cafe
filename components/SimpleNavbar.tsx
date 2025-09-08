@@ -9,7 +9,7 @@ import {
   BookOpenIcon, 
   MapPinIcon, 
   PhoneIcon,
-  CogIcon,
+  Cog6ToothIcon,
   ShoppingCartIcon,
   Bars3Icon,
   XMarkIcon,
@@ -103,9 +103,9 @@ const SimpleNavbar: React.FC = () => {
 
   // Admin/System items (for mobile menu only)
   const systemNavItems = [
-    { href: '/admin', label: t('nav.admin'), icon: CogIcon },
+    { href: '/admin', label: t('nav.admin'), icon: Cog6ToothIcon },
     { href: '/pos', label: t('nav.pos'), icon: ShoppingCartIcon },
-    { href: '/test-features', label: 'اختبار المميزات', icon: CogIcon }
+    { href: '/test-features', label: 'اختبار المميزات', icon: Cog6ToothIcon }
   ]
 
   const allNavItems = [...mainNavItems, ...systemNavItems]

@@ -7,8 +7,7 @@ import {
   ClockIcon, 
   PhoneIcon,
   CheckCircleIcon,
-  XCircleIcon,
-  LocationMarkerIcon
+  XCircleIcon
 } from '@heroicons/react/24/outline';
 import { useLanguage } from '../hooks/LanguageProvider';
 import { 
@@ -103,7 +102,7 @@ const BranchSelector: React.FC<BranchSelectorProps> = ({
             disabled={isLoading}
             className="flex items-center gap-2 px-3 py-2 text-sm bg-sakura-50 text-white rounded-lg hover:bg-sakura-100 transition-colors disabled:opacity-50"
           >
-            <LocationMarkerIcon className="w-4 h-4" />
+            <MapPinIcon className="w-4 h-4" />
             {isLoading ? 'جاري البحث...' : 'البحث عن أقرب فرع'}
           </button>
         )}
@@ -215,7 +214,7 @@ const BranchSelector: React.FC<BranchSelectorProps> = ({
 
                       {distance && (
                         <div className="flex items-center gap-2">
-                          <LocationMarkerIcon className="w-4 h-4" />
+                          <MapPinIcon className="w-4 h-4" />
                           <span className="font-arabic">{distance}</span>
                         </div>
                       )}

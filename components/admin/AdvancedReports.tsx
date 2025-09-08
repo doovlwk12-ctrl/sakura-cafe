@@ -7,8 +7,8 @@ import {
   CurrencyDollarIcon,
   ShoppingBagIcon,
   UsersIcon,
-  ArrowArrowTrendingUpIcon,
-  ArrowArrowTrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   CalendarIcon,
   ArrowDownTrayIcon,
   EyeIcon

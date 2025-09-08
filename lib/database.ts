@@ -118,6 +118,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  username?: string;
   phone?: string;
   loyalty_points: number;
   total_spent: number;
@@ -175,7 +176,7 @@ export interface CartReward {
   id: string;
   user_id: string;
   reward_id: string;
-  reward_type: 'discount' | 'free_item';
+  reward_type: 'discount' | 'free_item' | 'points';
   reward_value: number;
   points_used: number;
   applied_at: string;
@@ -216,7 +217,7 @@ class Database {
         username: 'ahmed_salem',
         email: 'ahmed@example.com',
         phone: '+966501234567',
-        full_name: 'أحمد سالم',
+        name: 'أحمد سالم',
         loyalty_points: 250, // نقاط كافية للحصول على مكافآت
         total_spent: 500,
         points_expiry_date: this.calculatePointsExpiryDate(),
@@ -228,7 +229,7 @@ class Database {
         username: 'sara_ali',
         email: 'sara@example.com',
         phone: '+966507654321',
-        full_name: 'سارة علي',
+        name: 'سارة علي',
         loyalty_points: 150, // نقاط متوسطة
         total_spent: 300,
         points_expiry_date: this.calculatePointsExpiryDate(),
@@ -240,7 +241,7 @@ class Database {
         username: 'mohammed_khalil',
         email: 'mohammed@example.com',
         phone: '+966509876543',
-        full_name: 'محمد خليل',
+        name: 'محمد خليل',
         loyalty_points: 50, // نقاط قليلة
         total_spent: 100,
         points_expiry_date: this.calculatePointsExpiryDate(),

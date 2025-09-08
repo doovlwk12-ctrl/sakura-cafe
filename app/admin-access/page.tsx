@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CogIcon, ShoppingCartIcon, UserIcon } from '@heroicons/react/24/outline';
+import { Cog6ToothIcon, ShoppingCartIcon, UserIcon } from '@heroicons/react/24/outline';
 import LoginModal from '../../components/auth/LoginModal';
 import { useAuth } from '../../components/AuthProvider';
 import { useRouter } from 'next/navigation';
@@ -69,7 +69,7 @@ export default function AdminAccessPage() {
           >
             <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 bg-sakura-50 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <CogIcon className="w-8 h-8 text-white" />
+                <Cog6ToothIcon className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-3 font-arabic">
                 لوحة الإدارة

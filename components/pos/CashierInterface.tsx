@@ -119,17 +119,17 @@ const CashierInterface: React.FC<CashierInterfaceProps> = ({
   const getStatusText = (status: Order['status']) => {
     switch (status) {
       case 'pending':
-        return 'في الانتظار';
+        return t('pos.orderStatus.pending');
       case 'preparing':
-        return 'قيد التحضير';
+        return t('pos.orderStatus.preparing');
       case 'ready':
-        return 'جاهز';
+        return t('pos.orderStatus.ready');
       case 'delivered':
-        return 'تم التوصيل';
+        return t('pos.orderStatus.delivered');
       case 'cancelled':
-        return 'ملغي';
+        return t('pos.orderStatus.cancelled');
       default:
-        return 'غير محدد';
+        return t('pos.orderStatus.undefined');
     }
   };
 
@@ -192,7 +192,7 @@ const CashierInterface: React.FC<CashierInterfaceProps> = ({
               <div className="flex items-center gap-2">
                 <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
                 <span className="text-sm text-gray-600 dark:text-gray-400 font-arabic">
-                  {isConnected ? 'متصل' : 'غير متصل'}
+                  {isConnected ? t('pos.connected') : t('pos.disconnected')}
                 </span>
               </div>
 
@@ -288,25 +288,25 @@ const CashierInterface: React.FC<CashierInterfaceProps> = ({
 
                 <div className="space-y-3 mb-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400 font-arabic">الهاتف:</span>
+                    <span className="text-gray-600 dark:text-gray-400 font-arabic">{t('pos.phone')}:</span>
                     <span className="text-gray-800 dark:text-white">{order.customerPhone}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400 font-arabic">النوع:</span>
+                    <span className="text-gray-600 dark:text-gray-400 font-arabic">{t('pos.orderType')}:</span>
                     <span className="text-gray-800 dark:text-white">
-                      {order.orderType === 'pickup' ? 'استلام' : 'توصيل'}
+                      {order.orderType === 'pickup' ? t('pos.orderType.pickup') : t('pos.orderType.delivery')}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400 font-arabic">الوقت:</span>
+                    <span className="text-gray-600 dark:text-gray-400 font-arabic">{t('pos.time')}:</span>
                     <span className="text-gray-800 dark:text-white">{formatTime(order.createdAt)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400 font-arabic">الدفع:</span>
+                    <span className="text-gray-600 dark:text-gray-400 font-arabic">{t('pos.payment')}:</span>
                     <span className="text-gray-800 dark:text-white">
-                      {order.paymentMethod === 'stc-pay' ? 'STC Pay' : 
-                       order.paymentMethod === 'mada' ? 'مدى' : 
-                       order.paymentMethod === 'cash' ? 'نقدي' : order.paymentMethod}
+                      {order.paymentMethod === 'stc-pay' ? t('pos.paymentMethod.stcPay') : 
+                       order.paymentMethod === 'mada' ? t('pos.paymentMethod.mada') : 
+                       order.paymentMethod === 'cash' ? t('pos.paymentMethod.cash') : order.paymentMethod}
                     </span>
                   </div>
                 </div>
@@ -432,24 +432,24 @@ const CashierInterface: React.FC<CashierInterfaceProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <h4 className="font-medium text-gray-700 dark:text-gray-300 font-arabic mb-2">
-                    معلومات العميل
+                    {t('pos.customerName')}
                   </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400 font-arabic">
-                    الاسم: {selectedOrder.customerName}
+                    {t('pos.customerName')}: {selectedOrder.customerName}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400 font-arabic">
-                    الهاتف: {selectedOrder.customerPhone}
+                    {t('pos.phone')}: {selectedOrder.customerPhone}
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-700 dark:text-gray-300 font-arabic mb-2">
-                    معلومات الطلب
+                    {t('pos.orderInfo')}
                   </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400 font-arabic">
-                    النوع: {selectedOrder.orderType === 'pickup' ? 'استلام' : 'توصيل'}
+                    {t('pos.orderType')}: {selectedOrder.orderType === 'pickup' ? t('pos.orderType.pickup') : t('pos.orderType.delivery')}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400 font-arabic">
-                    الوقت: {formatTime(selectedOrder.createdAt)}
+                    {t('pos.time')}: {formatTime(selectedOrder.createdAt)}
                   </p>
                 </div>
               </div>
