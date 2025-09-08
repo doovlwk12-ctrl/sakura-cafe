@@ -1,0 +1,8 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#FDF2F8"/>
+  <rect x="50" y="50" width="300" height="200" rx="20" fill="white" stroke="#FBCFE8" stroke-width="4"/>
+  <circle cx="200" cy="150" r="60" fill="#FCE7F3"/>
+  <circle cx="200" cy="150" r="40" fill="#FDF2F8"/>
+  <text x="200" y="180" text-anchor="middle" font-family="Arial" font-size="16" fill="#EC4899" font-weight="bold">Cortado</text>
+  <text x="200" y="200" text-anchor="middle" font-family="Arial" font-size="14" fill="#9CA3AF">كورتادو</text>
+</svg>

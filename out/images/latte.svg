@@ -1,0 +1,28 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cup -->
+  <path d="M50 60 L50 140 Q50 160 70 160 L130 160 Q150 160 150 140 L150 60 Z" fill="#FFFFFF" stroke="#D3D3D3" stroke-width="2"/>
+  
+  <!-- Cup Handle -->
+  <path d="M150 80 Q170 80 170 100 Q170 120 150 120" fill="none" stroke="#D3D3D3" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Coffee Base -->
+  <path d="M55 65 L145 65 L145 135 Q145 150 130 150 L70 150 Q55 150 55 135 Z" fill="#8B4513"/>
+  
+  <!-- Milk Foam -->
+  <ellipse cx="100" cy="70" rx="40" ry="10" fill="#F5F5F5"/>
+  
+  <!-- Latte Art - Heart -->
+  <path d="M90 75 Q100 65 110 75 Q100 85 90 75" fill="#8B4513"/>
+  
+  <!-- Steam -->
+  <path d="M70 40 Q75 35 80 40 Q85 35 90 40" fill="none" stroke="#E6E6FA" stroke-width="2" stroke-linecap="round"/>
+  <path d="M100 40 Q105 35 110 40 Q115 35 120 40" fill="none" stroke="#E6E6FA" stroke-width="2" stroke-linecap="round"/>
+  <path d="M130 40 Q135 35 140 40 Q145 35 150 40" fill="none" stroke="#E6E6FA" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Saucer -->
+  <ellipse cx="100" cy="170" rx="80" ry="15" fill="#F8F8FF" stroke="#D3D3D3" stroke-width="2"/>
+  
+  <!-- Spoon -->
+  <rect x="170" y="70" width="4" height="60" rx="2" fill="#C0C0C0"/>
+  <ellipse cx="172" cy="130" rx="8" ry="4" fill="#C0C0C0"/>
+</svg>

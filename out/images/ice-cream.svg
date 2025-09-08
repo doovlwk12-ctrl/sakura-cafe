@@ -1,0 +1,39 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ice Cream Scoop 1 -->
+  <ellipse cx="100" cy="80" rx="35" ry="25" fill="#FFB6C1"/>
+  
+  <!-- Ice Cream Scoop 2 -->
+  <ellipse cx="100" cy="60" rx="30" ry="20" fill="#98FB98"/>
+  
+  <!-- Ice Cream Scoop 3 -->
+  <ellipse cx="100" cy="45" rx="25" ry="15" fill="#87CEEB"/>
+  
+  <!-- Cone -->
+  <path d="M70 100 L100 160 L130 100 Z" fill="#DEB887" stroke="#CD853F" stroke-width="2"/>
+  
+  <!-- Cone Texture -->
+  <path d="M75 110 L100 150 L125 110" fill="none" stroke="#CD853F" stroke-width="1" opacity="0.6"/>
+  <path d="M80 120 L100 140 L120 120" fill="none" stroke="#CD853F" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Sprinkles -->
+  <rect x="85" y="70" width="2" height="6" rx="1" fill="#FF69B4" transform="rotate(45 85 70)"/>
+  <rect x="115" y="70" width="2" height="6" rx="1" fill="#00CED1" transform="rotate(-45 115 70)"/>
+  <rect x="100" y="55" width="2" height="6" rx="1" fill="#FFD700" transform="rotate(30 100 55)"/>
+  <rect x="90" y="65" width="2" height="6" rx="1" fill="#FF6347" transform="rotate(60 90 65)"/>
+  <rect x="110" y="65" width="2" height="6" rx="1" fill="#9370DB" transform="rotate(-60 110 65)"/>
+  
+  <!-- Cherry -->
+  <circle cx="100" cy="35" r="6" fill="#DC143C"/>
+  <path d="M100 29 Q105 25 110 29" fill="none" stroke="#228B22" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Plate -->
+  <ellipse cx="100" cy="180" rx="90" ry="20" fill="#F5F5DC" stroke="#D2B48C" stroke-width="2"/>
+  
+  <!-- Spoon -->
+  <rect x="170" y="70" width="4" height="60" rx="2" fill="#C0C0C0"/>
+  <ellipse cx="172" cy="130" rx="8" ry="4" fill="#C0C0C0"/>
+  
+  <!-- Melted Drops -->
+  <ellipse cx="75" cy="95" rx="8" ry="4" fill="#FFB6C1" opacity="0.7"/>
+  <ellipse cx="125" cy="95" rx="8" ry="4" fill="#98FB98" opacity="0.7"/>
+</svg>
