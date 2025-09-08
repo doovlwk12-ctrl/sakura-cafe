@@ -1,0 +1,226 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 🧑‍💻 جدول المستخدمين (عملاء + مديرين + كاشير)
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String?
+  role      Role     @default(CUSTOMER) // CUSTOMER | CASHIER | ADMIN
+  points    Int      @default(0)        // نقاط المكافآت
+  totalSpent Float   @default(0)       // إجمالي المبلغ المنفق
+  pointsExpiryDate DateTime?           // تاريخ انتهاء النقاط
+  orders    Order[]
+  cartItems CartItem[]
+  userRewards UserReward[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// 🛒 جدول المنتجات
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  nameAr      String   // الاسم بالعربية
+  description String?
+  descriptionAr String? // الوصف بالعربية
+  price       Float
+  imageUrl    String?
+  category    String
+  stock       Int      @default(0) // عدد الكمية المتاحة
+  calories    Int?     // السعرات الحرارية
+  status      ProductStatus @default(ACTIVE) // ACTIVE | INACTIVE
+  orders      OrderItem[]
+  cartItems   CartItem[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("products")
+}
+
+// 🏬 جدول الفروع
+model Branch {
+  id        Int      @id @default(autoincrement())
+  name      String
+  nameAr    String   // الاسم بالعربية
+  address   String
+  addressAr String   // العنوان بالعربية
+  latitude  Float
+  longitude Float
+  phone     String?
+  email     String?
+  isActive  Boolean  @default(true)
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("branches")
+}
+
+// 📦 جدول الطلبات
+model Order {
+  id           Int         @id @default(autoincrement())
+  user         User        @relation(fields: [userId], references: [id])
+  userId       Int
+  branch       Branch      @relation(fields: [branchId], references: [id])
+  branchId     Int
+  customerName String
+  customerPhone String
+  items        OrderItem[]
+  subtotal     Float
+  discount     Float       @default(0)
+  total        Float
+  status       OrderStatus @default(PENDING) // PENDING | PREPARING | READY | DELIVERED | CANCELLED
+  orderType    OrderType   @default(PICKUP)  // PICKUP | DELIVERY
+  paymentMethod String
+  paymentStatus PaymentStatus @default(PENDING) // PENDING | PAID | FAILED
+  notes        String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@map("orders")
+}
+
+// 🧾 تفاصيل الطلب (علاقة N:N بين المنتجات والطلبات)
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int     @default(1)
+  price     Float
+  customizations Json? // حجم، إضافات، ملاحظات
+
+  @@map("order_items")
+}
+
+// 🛒 جدول سلة التسوق
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int     @default(1)
+  customizations Json? // حجم، إضافات، ملاحظات
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
+  @@map("cart_items")
+}
+
+// 🎁 جدول المكافآت
+model Reward {
+  id        Int      @id @default(autoincrement())
+  name      String
+  nameAr    String   // الاسم بالعربية
+  type      RewardType // DISCOUNT | FREE_ITEM | POINTS
+  value     Float    // قيمة المكافأة
+  minPoints Int      // الحد الأدنى من النقاط المطلوبة
+  isActive  Boolean  @default(true)
+  userRewards UserReward[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rewards")
+}
+
+// 🎯 جدول مكافآت المستخدمين
+model UserReward {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  reward    Reward   @relation(fields: [rewardId], references: [id])
+  rewardId  Int
+  isUsed    Boolean  @default(false)
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@map("user_rewards")
+}
+
+// 📊 جدول إدارة المخزون
+model InventoryItem {
+  id            Int      @id @default(autoincrement())
+  name          String
+  nameAr        String   // الاسم بالعربية
+  category      String
+  currentStock  Int      @default(0)
+  minStock      Int      @default(0)
+  maxStock      Int      @default(0)
+  unit          String   @default("piece")
+  cost          Float    @default(0)
+  price         Float    @default(0)
+  supplier      String?
+  lastRestocked DateTime?
+  expiryDate    DateTime?
+  status        InventoryStatus @default(IN_STOCK)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("inventory_items")
+}
+
+// 🔑 الأدوار
+enum Role {
+  CUSTOMER
+  CASHIER
+  ADMIN
+}
+
+// 📌 حالات الطلب
+enum OrderStatus {
+  PENDING
+  PREPARING
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+// 🚚 نوع الطلب
+enum OrderType {
+  PICKUP
+  DELIVERY
+}
+
+// 💳 حالة الدفع
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+// 📦 حالة المنتج
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
+// 🎁 نوع المكافأة
+enum RewardType {
+  DISCOUNT
+  FREE_ITEM
+  POINTS
+}
+
+// 📊 حالة المخزون
+enum InventoryStatus {
+  IN_STOCK
+  LOW_STOCK
+  OUT_OF_STOCK
+  EXPIRED
+}

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import CashierInterface from '../../components/pos/CashierInterface';
+import POSSystem from '../../components/pos/POSSystem';
 import { useLanguage } from '../../hooks/LanguageProvider';
 
 export default function POSPage() {
@@ -21,25 +21,17 @@ export default function POSPage() {
       } catch (error) {
         console.error('Error parsing cashier session:', error);
         localStorage.removeItem('cashierSession');
-        router.push('/cashier-login');
       }
-    } else {
-      router.push('/cashier-login');
     }
     setIsLoading(false);
-  }, [router]);
-
-  const handleLogout = () => {
-    localStorage.removeItem('cashierSession');
-    router.push('/cashier-login');
-  };
+  }, []);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+      <div className="min-h-screen bg-[#fefefe] dark:bg-[#111827] flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-sakura-50 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400 font-arabic">
+          <div className="w-16 h-16 border-4 border-[#e57373] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#6b7280] dark:text-[#9ca3af] font-arabic">
             جاري التحميل...
           </p>
         </div>
@@ -47,12 +39,46 @@ export default function POSPage() {
     );
   }
 
+  // If no session, show login prompt
   if (!cashierSession) {
-    return null; // Will redirect to login
+    return (
+      <div className="min-h-screen bg-[#fefefe] dark:bg-[#111827] flex items-center justify-center p-4 transition-colors duration-300">
+        <div className="bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-[#374151] rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-[#e57373] to-[#f28b82] rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-white text-2xl">☕</span>
+          </div>
+          
+          <h1 className="text-2xl font-bold text-[#1f2937] dark:text-[#f9fafb] font-arabic mb-4">
+            نقطة البيع
+          </h1>
+          
+          <p className="text-[#6b7280] dark:text-[#9ca3af] font-arabic mb-6">
+            يرجى تسجيل الدخول للوصول إلى واجهة الكاشير
+          </p>
+          
+          <button
+            onClick={() => router.push('/cashier-login')}
+            className="w-full px-6 py-3 bg-[#e57373] text-white rounded-lg font-medium hover:bg-[#d65a5a] transition-all duration-300 font-arabic"
+          >
+            تسجيل دخول الكاشير
+          </button>
+          
+          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200 font-arabic mb-2">
+              بيانات تجريبية:
+            </h3>
+            <div className="text-xs text-blue-700 dark:text-blue-300 font-arabic space-y-1">
+              <p>اسم المستخدم: cashier</p>
+              <p>كلمة المرور: 123456</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <CashierInterface 
+    <POSSystem 
       cashierName={cashierSession.username}
       branchId={cashierSession.branch}
     />

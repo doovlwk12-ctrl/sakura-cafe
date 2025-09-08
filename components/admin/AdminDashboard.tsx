@@ -5,7 +5,10 @@ import { useAuth } from '../AuthProvider';
 import LanguageSwitcher from '../LanguageSwitcher';
 import ThemeToggle from '../ThemeToggle';
 import UserManagement from './UserManagement';
-import { useLanguage } from '../../hooks/LanguageProvider';
+import AdvancedReports from './AdvancedReports';
+import InventoryManagement from './InventoryManagement';
+import RealTimeNotifications from '../RealTimeNotifications';
+import { useLanguage } from '../hooks/LanguageProvider';
 
 const AdminDashboard: React.FC = () => {
   const { logout, user } = useAuth();
@@ -18,6 +21,7 @@ const AdminDashboard: React.FC = () => {
     { id: 'orders', label: t('admin.orders'), icon: '📋' },
     { id: 'users', label: t('admin.users'), icon: '👥' },
     { id: 'reports', label: t('admin.reports'), icon: '📈' },
+    { id: 'inventory', label: 'إدارة المخزون', icon: '📦' },
     { id: 'settings', label: t('admin.settings'), icon: '⚙️' }
   ];
 
@@ -32,7 +36,9 @@ const AdminDashboard: React.FC = () => {
       case 'users':
         return <UsersManagementContent />;
       case 'reports':
-        return <ReportsContent />;
+        return <AdvancedReports />;
+      case 'inventory':
+        return <InventoryManagement />;
       case 'settings':
         return <SettingsContent />;
       default:
@@ -66,6 +72,7 @@ const AdminDashboard: React.FC = () => {
           
           <div className="flex items-center gap-1 md:gap-3">
             <div className="hidden sm:flex items-center gap-2">
+              <RealTimeNotifications userRole="admin" />
               <LanguageSwitcher showText={false} />
               <ThemeToggle showText={false} />
             </div>
@@ -1070,11 +1077,11 @@ const OrdersContent: React.FC = () => {
                   <span className="text-2xl font-bold text-sakura-50">
                     {selectedOrder.total} ريال
                   </span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
       )}
   </div>
 );

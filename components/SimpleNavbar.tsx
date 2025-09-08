@@ -104,7 +104,8 @@ const SimpleNavbar: React.FC = () => {
   // Admin/System items (for mobile menu only)
   const systemNavItems = [
     { href: '/admin', label: t('nav.admin'), icon: CogIcon },
-    { href: '/pos', label: t('nav.pos'), icon: ShoppingCartIcon }
+    { href: '/pos', label: t('nav.pos'), icon: ShoppingCartIcon },
+    { href: '/test-features', label: 'اختبار المميزات', icon: CogIcon }
   ]
 
   const allNavItems = [...mainNavItems, ...systemNavItems]

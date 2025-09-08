@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { productImages } from '../../data/productImages';
 import { useLanguage } from '../../hooks/LanguageProvider';
 import { useTheme } from '../../hooks/useTheme';
 import LanguageSwitcher from '../LanguageSwitcher';
 import ThemeToggle from '../ThemeToggle';
+import RealTimeNotifications from '../RealTimeNotifications';
 
 interface OrderItem {
   id: string;
@@ -15,14 +17,25 @@ interface OrderItem {
   total: number;
 }
 
-const POSSystem: React.FC = () => {
+interface POSSystemProps {
+  cashierName?: string;
+  branchId?: string;
+}
+
+const POSSystem: React.FC<POSSystemProps> = ({ cashierName = 'كاشير', branchId = 'branch-001' }) => {
   const { t, isRTL } = useLanguage();
   const { isDark } = useTheme();
+  const router = useRouter();
   const [currentOrder, setCurrentOrder] = useState<OrderItem[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+
+  const handleLogout = () => {
+    localStorage.removeItem('cashierSession');
+    router.push('/cashier-login');
+  };
 
   const categories = [
     { id: 'all', label: t('pos.all'), icon: '🍽️' },
@@ -115,8 +128,15 @@ const POSSystem: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-3">
+            <RealTimeNotifications userRole="cashier" />
             <LanguageSwitcher showText={false} />
             <ThemeToggle showText={false} />
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-arabic"
+            >
+              تسجيل الخروج
+            </button>
           </div>
         </div>
       </header>

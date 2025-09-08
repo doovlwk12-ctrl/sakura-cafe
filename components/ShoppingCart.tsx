@@ -23,7 +23,7 @@ interface ShoppingCartProps {
 
 const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose }) => {
   const { items, totalItems, totalPrice, updateQuantity, removeFromCart, clearCart } = useCart();
-  const { createOrder } = useOrders();
+  const { addOrder } = useOrders();
   const { user, isAuthenticated } = useAuth();
   const { t, isRTL } = useLanguage();
 
@@ -127,7 +127,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose }) => {
         customizations: item.customizations
       }));
 
-      const order = await createOrder({
+      const order = await addOrder({
         items: orderItems,
         totalAmount: totalPrice,
         paymentMethod: checkoutData.paymentMethod,
@@ -143,7 +143,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose }) => {
       onClose();
       
       // Show success message with barcode
-      alert(`تم إنشاء الطلب بنجاح!\nرقم الطلب: ${order.orderNumber}\nالباركود: ${order.barcode}\nالوقت المتوقع: ${order.estimatedTime} دقيقة`);
+      alert(`تم إنشاء الطلب بنجاح!\nرقم الطلب: ${(order as any)?.orderNumber || 'N/A'}\nالباركود: ${(order as any)?.barcode || 'N/A'}\nالوقت المتوقع: ${(order as any)?.estimatedTime || 'N/A'} دقيقة`);
       
     } catch (error) {
       console.error('Error creating order:', error);

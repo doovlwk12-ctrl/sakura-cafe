@@ -126,6 +126,23 @@ export interface User {
   updated_at: string;
 }
 
+export interface InventoryItem {
+  id: string;
+  name: string;
+  arabicName: string;
+  category: string;
+  currentStock: number;
+  minStock: number;
+  maxStock: number;
+  unit: string;
+  cost: number;
+  price: number;
+  supplier: string;
+  lastRestocked: Date;
+  expiryDate?: Date;
+  status: 'in_stock' | 'low_stock' | 'out_of_stock' | 'expired';
+}
+
 export interface Reward {
   id: string;
   name: string;
@@ -176,6 +193,7 @@ class Database {
   private branches: Branch[] = [];
   private admins: Admin[] = [];
   private cashiers: Cashier[] = [];
+  private inventory: InventoryItem[] = [];
 
   constructor() {
     this.initializeDefaultData();
@@ -746,6 +764,64 @@ class Database {
       totalRevenue: this.orders.reduce((sum, order) => sum + order.total, 0),
       todayRevenue: todayOrders.reduce((sum, order) => sum + order.total, 0)
     };
+  }
+
+  // Inventory Management Methods
+  getInventory(): InventoryItem[] {
+    return this.inventory;
+  }
+
+  addInventoryItem(item: Omit<InventoryItem, 'id' | 'status'>): InventoryItem {
+    const newItem: InventoryItem = {
+      ...item,
+      id: Date.now().toString(),
+      status: this.calculateInventoryStatus(item.currentStock, item.minStock)
+    };
+    
+    this.inventory.push(newItem);
+    return newItem;
+  }
+
+  updateInventoryItem(id: string, updates: Partial<InventoryItem>): InventoryItem | null {
+    const index = this.inventory.findIndex(item => item.id === id);
+    if (index === -1) return null;
+
+    const updatedItem = {
+      ...this.inventory[index],
+      ...updates,
+      status: this.calculateInventoryStatus(
+        updates.currentStock ?? this.inventory[index].currentStock,
+        updates.minStock ?? this.inventory[index].minStock
+      )
+    };
+
+    this.inventory[index] = updatedItem;
+    return updatedItem;
+  }
+
+  deleteInventoryItem(id: string): boolean {
+    const index = this.inventory.findIndex(item => item.id === id);
+    if (index === -1) return false;
+
+    this.inventory.splice(index, 1);
+    return true;
+  }
+
+  private calculateInventoryStatus(currentStock: number, minStock: number): InventoryItem['status'] {
+    if (currentStock === 0) return 'out_of_stock';
+    if (currentStock <= minStock) return 'low_stock';
+    return 'in_stock';
+  }
+
+  restockInventoryItem(id: string): InventoryItem | null {
+    const item = this.inventory.find(i => i.id === id);
+    if (!item) return null;
+
+    return this.updateInventoryItem(id, {
+      currentStock: item.maxStock,
+      lastRestocked: new Date(),
+      status: 'in_stock'
+    });
   }
 }
 
